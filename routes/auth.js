@@ -22,8 +22,10 @@ router.post("/login", passport.authenticate('local', {
     res.status(200).json({redirection: "/econfirmation"});
 })
 
+
+// TODO: 1 do the logic here + dont forget to redirect the user into the home page (localhost::3000) not the server page (localhost:3001)
 router.get("/eConfirmation/:code", (req, res, next) => {
-    res.send("confirmed");
+    res.redirect('/');
 })
 
 router.route("/logout")
@@ -35,6 +37,7 @@ router.route("/logout")
     })
 
 //TODO: replace the error response with the next cb function
+//TODO: add the confirmation email here too
 router.route('/register')
     .post(async (req, res, next) => {
         const {fName, lName, username, email, password} = req.body;
@@ -69,7 +72,7 @@ router.route('/register')
         
         passport.authenticate('local')
 
-        res.status(201).json({redirection: "/"});
+        res.status(201).json({message: "Please check your email for confirmation"});
         next();
     })
 

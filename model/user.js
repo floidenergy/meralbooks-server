@@ -79,9 +79,26 @@ const userModel = new Schema({
         default: false,
         require: true
     },
+    privacyToken:{
+        type: [{
+            token: {
+                type: String,
+                require: true
+            },
+            Type: {
+                type: String,
+                require: true
+            },
+            timeStamp: {
+                type: Date,
+                default: new Date()
+            }
+        }],
+        require: false
+    },
     created_at:{
         type: Date,
-        require: true
+        default: new Date()
     }
 })
 

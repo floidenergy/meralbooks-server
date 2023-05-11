@@ -8,30 +8,24 @@ const User = require("../model/user");
 const { validatePassword } = require("./passwordUtils");
 const {SendConfirmationEmail} = require('./emailConfimationReq');
 
+
 passport.use(
     new LocalStrategy(async (username, password, done) => {
         const resultUser = await User.findOne({
             $or: [{ username: username }, { email: username }],
         });
 
-        if (!resultUser) {
-            // user is invalid
+        if (!resultUser)
             return done(
                 { message: "Invalid Credentials" },
                 false,
                 "Invalid Credentials"
             );
-        }
 
         if (validatePassword(password, resultUser.hash, resultUser.salt)) {
-            // user found
 
-            // TODO: enable this after you impliment the email confimation ---> 
             if (!resultUser.confirmedEmail){
-                
-                const confirmationCode = "123456789";
-                
-                SendConfirmationEmail(resultUser.email, confirmationCode);
+                const result = await SendConfirmationEmail(resultUser.id);
                 
                 return done(
                     { message: "Please Confirm Your Email" },
@@ -46,7 +40,7 @@ passport.use(
                 { message: "Invalid Credentials" },
                 false,
                 "Invalid Credentials"
-            );
+            )
     })
 );
 

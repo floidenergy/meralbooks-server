@@ -11,6 +11,8 @@ const cors = require('cors')
 const booksRouter = require('./routes/books')
 const authRouter = require('./routes/auth')
 
+const confirmation = require('./utils/emailConfimationReq').SendConfirmationEmail;
+
 const server = express();
 
 server.use(express.urlencoded({extended: false}));
@@ -47,7 +49,7 @@ server.use((req, res, next) => {
 
     next();
 })
-server.post("/", (req, res) => res.json({message: 'welcome to meralbooks back end server'}));
+server.get("/", (req, res) => res.json({message: 'welcome to meralbooks back end server'}));
 
 server.use((err, req, res, next) => {
     if(err){
@@ -55,6 +57,11 @@ server.use((err, req, res, next) => {
     }
     next();
 })
+
+// server.get("/conf", async (req, res) => {
+//     const result = await confirmation("user@gmail.com", "aaaaaaaaaaaaa");
+//     res.json(result);
+// })
 
 mongoose.connect(process.env.DB_STRING,{
     useNewUrlParser: true,
