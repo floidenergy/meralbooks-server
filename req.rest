@@ -1,0 +1,10 @@
+get  http://localhost:3001/
+Content-Type: application/json
+
+{
+    "user": {
+        "username": "floidus",
+        "password": "maluma31",
+        "DOB": "20-10-1998"
+    }
+}
