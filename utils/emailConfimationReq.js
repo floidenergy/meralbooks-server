@@ -12,7 +12,7 @@ const SendConfirmationEmail = async (user_id, type) => {
     const userObj = {id: User.id, name: User.name, type: type};
 
     const token = jwt.sign(userObj, process.env.JWT_TOKEN, {
-        expiresIn: "1h",
+        expiresIn: "10min",
     });
 
     return await SendEmail(User.email, token);

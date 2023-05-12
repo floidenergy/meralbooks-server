@@ -25,7 +25,7 @@ router.post("/login", passport.authenticate('local', {
 
 // TODO: 1 do the logic here + dont forget to redirect the user into the home page (localhost::3000) not the server page (localhost:3001)
 router.get("/eConfirmation/:code", (req, res, next) => {
-    res.redirect('/');
+    
 })
 
 router.route("/logout")
