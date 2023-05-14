@@ -1,7 +1,7 @@
 require('dotenv').config
 const mailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
-const UserModel = require('../model/user')
+const UserModel = require('../model/user');
 
 const SendConfirmationEmail = async (user_id, type) => {
     const User = await UserModel.findById(user_id)
@@ -12,7 +12,7 @@ const SendConfirmationEmail = async (user_id, type) => {
     const userObj = {id: User.id, name: User.name, type: type};
 
     const token = jwt.sign(userObj, process.env.JWT_TOKEN, {
-        expiresIn: "10min",
+        expiresIn: "30min",
     });
 
     return await SendEmail(User.email, token);
