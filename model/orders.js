@@ -22,6 +22,9 @@ const orderSchema = new Schema({
         type: String,
         require: true
     },
+    items:{
+        type: [string]
+    },
     status: {
         type: Number,
         require: true

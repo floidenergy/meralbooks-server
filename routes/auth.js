@@ -18,9 +18,7 @@ const router = Router();
 router.post("/login", passport.authenticate('local', {
     successMessage: "you have been succesfully connected",
     failureMessage: true
-}), (req, res, next) => {
-    res.status(200).json({ redirection: "/" });
-})
+}))
 
 
 // TODO: 1 do the logic here + dont forget to redirect the user into the home page (localhost::3000) not the server page (localhost:3001)
@@ -86,8 +84,6 @@ router.route('/register')
 
         if (result.errors)
             return res.sendStatus(500);
-
-        passport.authenticate('local')
 
         res.status(201).json({ message: "Please check your email for confirmation" });
         next();

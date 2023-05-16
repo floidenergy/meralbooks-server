@@ -5,6 +5,7 @@ const session = require("express-session");
 const mongoose = require('mongoose');
 const MongoStorage = require("connect-mongo");
 const passport = require("passport");
+const cookiePaerser = require('cookie-parser')
 
 const cors = require('cors')
 
@@ -13,14 +14,21 @@ const authRouter = require('./routes/auth')
 
 const confirmation = require('./utils/emailConfimationReq').SendConfirmationEmail;
 
+
 const server = express();
 
-server.use(express.urlencoded({extended: false}));
-server.use(express.json());
+server.use(cookiePaerser());
 
-server.use(cors());
+server.use(express.json());
+server.use(express.urlencoded({extended: false}));
+
+server.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+}));
 
 server.use(session({
+    name: "merals.id",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
@@ -45,7 +53,7 @@ server.use('/', authRouter);
 
 server.use((req, res, next) => {
     if(req.user)
-        console.log(req.session);
+        console.log(req.cookies);
 
     next();
 })
@@ -53,6 +61,7 @@ server.get("/", (req, res) => res.json({message: 'welcome to meralbooks back end
 
 server.use((err, req, res, next) => {
     if(err){
+        console.log(err);
         res.status(400).json(err);
     }
     next();
