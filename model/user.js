@@ -18,6 +18,14 @@ const userModel = new Schema({
         type: String,
         require: true
     },
+    gender:{
+        type: String,
+        require: true
+    },
+    dob:{
+        type: Date,
+        require: false // TODO: make it true later on
+    },
     profilePic:{
         type: String,
         required: false,

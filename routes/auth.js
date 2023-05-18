@@ -18,7 +18,22 @@ const router = Router();
 router.post("/login", passport.authenticate('local', {
     successMessage: "you have been succesfully connected",
     failureMessage: true
-}))
+}), (req, res, next) =>{
+    const user = {
+        id: req.user.id,
+        name: {
+            fName: req.user.name.fName,
+            lName: req.user.name.lName
+        },
+        email: req.user.email,
+        info: req.user.email,
+        profilePic: req.user.profilePic,
+        info: req.user.info,
+        order_history: req.user.order_history
+    }
+
+    res.status(200).json(user);
+})
 
 
 // TODO: 1 do the logic here + dont forget to redirect the user into the home page (localhost::3000) not the server page (localhost:3001)
@@ -55,7 +70,7 @@ router.route("/logout")
 //TODO: add the confirmation email here too
 router.route('/register')
     .post(async (req, res, next) => {
-        const { fName, lName, username, email, password } = req.body;
+        const { fName, lName, username, email, password, gender } = req.body;
         const usernameExist = await User.findOne({ username: username });
         if (usernameExist)
             return res.json({ message: "Username Already Taken" });
@@ -64,7 +79,7 @@ router.route('/register')
         if (emailExist)
             return res.json({ message: "E-mail Already Taken" });
 
-        if (!fName || !lName || !username || !email || !password)
+        if (!fName || !lName || !username || !email || !password || !gender)
             return res.json({ message: "please provide a valid data" });
 
         const userSecret = genPassword(password);
@@ -75,6 +90,7 @@ router.route('/register')
             },
             username: username,
             email: email,
+            gender: gender,
             hash: userSecret.hash,
             salt: userSecret.salt,
             created_at: new Date()
