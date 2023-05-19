@@ -52,8 +52,8 @@ server.use('/', booksRouter);
 server.use('/', authRouter);
 
 server.use((req, res, next) => {
-    if(req.user)
-        console.log(req.cookies);
+    // if(req.user)
+    //     console.log(req.cookies);
 
     next();
 })

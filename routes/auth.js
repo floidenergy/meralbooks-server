@@ -25,6 +25,7 @@ router.post("/login", passport.authenticate('local', {
             fName: req.user.name.fName,
             lName: req.user.name.lName
         },
+        username: req.user.username,
         email: req.user.email,
         info: req.user.email,
         profilePic: req.user.profilePic,
@@ -59,11 +60,11 @@ router.get("/eConfirmation/:token", async (req, res, next) => {
 })
 
 router.route("/logout")
-    .post((req, res, next) => {
+    .get((req, res, next) => {
         if (req.user)
             req.logOut(() => { });
 
-        next();
+        res.sendStatus(200);
     })
 
 //TODO: replace the error response with the next cb function
