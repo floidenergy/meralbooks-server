@@ -10,16 +10,13 @@ const cookiePaerser = require('cookie-parser')
 const cors = require('cors')
 
 const booksRouter = require('./routes/books')
-const authRouter = require('./routes/auth')
-
-const confirmation = require('./utils/emailConfimationReq').SendConfirmationEmail;
-
+const AccountsRouter = require('./routes/Accounts');
 
 const server = express();
 
 server.use(cookiePaerser());
 
-server.use(express.json());
+server.use(express.json({limit: '20mb'}));
 server.use(express.urlencoded({extended: false}));
 
 server.use(cors({
@@ -49,7 +46,7 @@ server.use(passport.session());
 
 
 server.use('/', booksRouter);
-server.use('/', authRouter);
+server.use('/', AccountsRouter);
 
 server.use((req, res, next) => {
     // if(req.user)

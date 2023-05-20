@@ -89,6 +89,13 @@ const userModel = new Schema({
     },
     privacyToken:{
         type: [String],
+        require: true
+    },
+    accountHistory: {
+        type: [{
+            date: Date,
+            type: String
+        }],
         require: false
     },
     created_at:{
