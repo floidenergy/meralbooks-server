@@ -84,8 +84,7 @@ const userModel = new Schema({
     },
     isAdmin:{
         type: Boolean,
-        default: false,
-        require: true
+        default: undefined
     },
     privacyToken:{
         type: [String],

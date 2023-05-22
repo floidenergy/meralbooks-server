@@ -26,10 +26,7 @@ const SendEmail = async (userEmail, code) =>{
         port: process.env.EMAIL_PORT,
         secure: false,
         from: `<${process.env.EMAIL_USER}>`,
-        auth: {
-            user: "user",
-            pass: "pass"
-        }
+        
     })
 
     let info = await transport.sendMail({
@@ -37,7 +34,7 @@ const SendEmail = async (userEmail, code) =>{
         subject: "MeralBOOKS E-Mail Confirmation",
         html: `
             <p>please confirm your email by clicking </p>
-            <a href="http://localhost:3001/eConfirmation/${code}" >here</a>
+            <a href="http://localhost:3000/email?token=${code}" >here</a>
         `
     });
 

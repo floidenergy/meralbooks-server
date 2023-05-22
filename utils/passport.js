@@ -6,7 +6,7 @@ const LocalStrategy = require("passport-local");
 
 const User = require("../model/user");
 const { validatePassword } = require("./passwordUtils");
-const {SendConfirmationEmail} = require('./emailConfimationReq');
+const { SendConfirmationEmail } = require('./emailConfimationReq');
 
 
 passport.use(
@@ -24,16 +24,22 @@ passport.use(
 
         if (validatePassword(password, resultUser.hash, resultUser.salt)) {
 
-            if (!resultUser.confirmedEmail){
+            if (!resultUser.confirmedEmail) {
                 const result = await SendConfirmationEmail(resultUser.id);
-                
+                if(!result){
+                    return done(
+                        { message: "something went wrong with email" },
+                        false,
+                        "something went wrong with email"
+                    )
+                }
                 return done(
                     { message: "Please Confirm Your Email" },
                     false,
                     "Please Confirm Your E-mail"
-                   );
+                );
             }
-                    
+
             return done(null, resultUser);
         } else
             return done(

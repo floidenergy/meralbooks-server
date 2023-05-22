@@ -11,6 +11,7 @@ const cors = require('cors')
 
 const booksRouter = require('./routes/books')
 const AccountsRouter = require('./routes/Accounts');
+const MailSubscriptionRouter = require('./routes/subscription')
 
 const server = express();
 
@@ -31,7 +32,7 @@ server.use(session({
     saveUninitialized: true,
     store: new MongoStorage({
         mongoUrl: process.env.DB_STRING,
-        dbName: 'test',
+        dbName: 'meralBooks',
         collectionName: 'sessions'
     }),
     cookie:{
@@ -47,6 +48,7 @@ server.use(passport.session());
 
 server.use('/', booksRouter);
 server.use('/', AccountsRouter);
+server.use('/', MailSubscriptionRouter);
 
 server.use((req, res, next) => {
     // if(req.user)
