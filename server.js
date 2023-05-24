@@ -5,13 +5,13 @@ const session = require("express-session");
 const mongoose = require('mongoose');
 const MongoStorage = require("connect-mongo");
 const passport = require("passport");
-const cookiePaerser = require('cookie-parser')
+const cookiePaerser = require('cookie-parser');
 
 const cors = require('cors')
 
-const booksRouter = require('./routes/books')
 const AccountsRouter = require('./routes/Accounts');
-const MailSubscriptionRouter = require('./routes/subscription')
+const MailSubscriptionRouter = require('./routes/subscription');
+const adminRouter = require('./routes/admin');
 
 const server = express();
 
@@ -21,7 +21,7 @@ server.use(express.json({limit: '20mb'}));
 server.use(express.urlencoded({extended: false}));
 
 server.use(cors({
-    origin: "http://localhost:3000",
+    origin: ["http://admin.localhost:3000", "http://localhost:3000"],
     credentials: true
 }));
 
@@ -46,7 +46,7 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 
-server.use('/', booksRouter);
+server.use('/admin', adminRouter)
 server.use('/', AccountsRouter);
 server.use('/', MailSubscriptionRouter);
 

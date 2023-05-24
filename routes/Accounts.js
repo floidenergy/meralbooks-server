@@ -25,8 +25,7 @@ AccountsRouter.post("/login", passport.authenticate('local', {
         info: req.user.email,
         profilePic: req.user.profilePic,
         info: req.user.info,
-        order_history: req.user.order_history,
-        isAdmin: req.user.isAdmin
+        order_history: req.user.order_history
     }
 
     console.log(req.user);
