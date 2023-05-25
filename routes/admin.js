@@ -27,8 +27,7 @@ router.route('/books')
     // if(!status)
     //     return res.status(500).json({message: "Couldn't add A new Book"});
 
-    res.status(200).json({message: "Success"})
-
+    res.status(200).json({message: "Success"});
 
 });
 

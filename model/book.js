@@ -30,12 +30,17 @@ const bookSchema = new Schema({
         type: Number,
         require: true
     },
-    quantity:{
-        type: Number,
-        require: true
-    },
-    language:{
-        type: String,
+    stock:{
+        type: [{
+            quantity: {
+                type: Number,
+                require: true
+            },
+            language:{
+                type: String,
+                require: true
+            }
+        }],
         require: true
     },
     category:{
@@ -45,10 +50,6 @@ const bookSchema = new Schema({
                 require: true
             }
         },
-        require: true
-    },
-    availablity:{
-        type: Boolean,
         require: true
     },
     review:{
