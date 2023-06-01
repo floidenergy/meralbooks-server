@@ -1,35 +1,48 @@
-const {Router} = require('express')
+const { Router } = require('express')
 const passport = require('passport')
+const path = require('path')
+
 const router = Router();
 
-router.post("/login", passport.authenticate('admin-local'),(req, res, next) => {
-    res.json(req.user);
-  })
+const { UploadBook } = require('../controllers/admin/books/UploadBook')
+
+router.post("/login", passport.authenticate('admin-local', {
+    successMessage: "you have been succesfully connected",
+    failureMessage: true
+}), (req, res, next) => {
+    // TODO: structure the data to send into the client side
+    console.log(req.session);
+    res.status(200).json(req.user);
+})
+
+// router.post('/login', (req, res, next) => {
+//     res.cookie('testCookie', "52214796", {maxAge: 9000000, httpOnly: true});
+//     res.sendStatus(200);
+// })
+
+// router.post('/login', passport.authenticate('admin-local', (err, user) => {
+//     if (err) {
+//       return next(err);
+//     }
+//     if (!user) {
+//       return res.status(401).json({ message: "Invalid username or password" });
+//     }
+//     req.login(user, (err) => {
+//       if (err) {
+//         return next(err);
+//       }
+//       return res.json(req.user);
+//     });
+//   }), (req, res, next) => {
+//         // TODO: structure the data to send into the client side
+//         console.log(req.session);
+//         res.status(200).json(req.user);
+//     })
+
 
 // books
-
 router.route('/books')
-.post(async (req, res, next) => {
-    // const data = req.body;
-    // console.log(req.file);
-
-        // console.log(req.body);
-        // res.send("Success");
-    // const book = new Book({
-    //     name: data.name,
-    //     quantity: data.quantity,
-    //     author: data.author,
-    //     price: data.price
-    // })
-
-    // const status = book.save();
-
-    // if(!status)
-    //     return res.status(500).json({message: "Couldn't add A new Book"});
-
-    res.status(200).json({message: "Success"});
-
-});
+    .post(UploadBook);
 
 
 module.exports = router;

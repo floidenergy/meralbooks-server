@@ -1,7 +1,6 @@
 /** @format */
 
 const passport = require("passport");
-const express = require("express");
 const LocalStrategy = require("passport-local");
 
 const User = require("../model/user");
@@ -96,6 +95,7 @@ passport.use('admin-local',
 )
 
 passport.serializeUser((user, done) => {
+    console.log('serialize');
     done(null, user.id);
 });
 
