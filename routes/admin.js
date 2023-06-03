@@ -1,10 +1,11 @@
 const { Router } = require('express')
 const passport = require('passport')
+const multer = require('multer')
 const path = require('path')
 
 const router = Router();
 
-const { UploadBook } = require('../controllers/admin/books/UploadBook')
+const { UploadBook, StoreImage } = require('../controllers/admin/books/UploadBook')
 
 router.post("/login", passport.authenticate('admin-local', {
     successMessage: "you have been succesfully connected",
@@ -15,34 +16,27 @@ router.post("/login", passport.authenticate('admin-local', {
     res.status(200).json(req.user);
 })
 
-// router.post('/login', (req, res, next) => {
-//     res.cookie('testCookie', "52214796", {maxAge: 9000000, httpOnly: true});
-//     res.sendStatus(200);
-// })
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './uploads'); // Specify the destination directory
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+        cb(null, uniqueSuffix + '-' + file.originalname);
+    },
+});
 
-// router.post('/login', passport.authenticate('admin-local', (err, user) => {
-//     if (err) {
-//       return next(err);
-//     }
-//     if (!user) {
-//       return res.status(401).json({ message: "Invalid username or password" });
-//     }
-//     req.login(user, (err) => {
-//       if (err) {
-//         return next(err);
-//       }
-//       return res.json(req.user);
-//     });
-//   }), (req, res, next) => {
-//         // TODO: structure the data to send into the client side
-//         console.log(req.session);
-//         res.status(200).json(req.user);
-//     })
+const upload = multer({ storage });
+
+// Route to handle image upload
+router.post('/test', upload.single('file'), (req, res) => {
+    res.json({ message: 'Image uploaded successfully' });
+});
 
 
 // books
 router.route('/books')
-    .post(UploadBook);
+    .post(StoreImage, UploadBook);
 
 
 module.exports = router;

@@ -1,10 +1,10 @@
 
 const multer = require('multer');
-
+const Book = require('../../../model/book')
 
 const bookImageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '../images/books');
+    cb(null, './upload');
   },
   filename: (req, file, cb) => {
     cb(null, new Date.now() + path.extname(file.originalname));
@@ -13,18 +13,44 @@ const bookImageStorage = multer.diskStorage({
 
 const bookUpload = multer({ storage: bookImageStorage });
 
-
-module.exports.UploadBook = async (req, res, next) => {
+module.exports.bookUpload = 
+module.exports.StoreImage = (req, res, next) => {
+  // Check your desired conditions here
+  // For example, check if the user is authenticated or if certain fields are present in the request
   if(!req.user.isAdmin)
     return res.status(403)
 
-  // console.log(req.user);
+  // If conditions are met, proceed with file upload using Multer
+  bookUpload.single('bookPicture')(req, res, err => {
+    if (err instanceof multer.MulterError) {
+      // Multer error occurred during file upload
+      return res.status(400).json({ error: err.message });
+    } else if (err) {
+      // Other error occurred
+      return res.status(500).json({ error: err.message });
+    }
 
-  // const data = req.body;
-  // console.log(req.file);
+    // No error, continue with the next middleware/route handler
+    next();
+  });
+};
+
+module.exports.UploadBook = async (req, res, next) => {
+  
+  if(!req.user.isAdmin)
+    return res.status(403)
+
+    console.log(req.body);
+// next();
+
+
+
+  const data = req.body;
+  console.log(req.file);
 
   // console.log(req.body);
-  // res.send("Success");
+  // next();
+  // // res.send("Success");
   // const book = new Book({
   //     name: data.name,
   //     quantity: data.quantity,
@@ -32,11 +58,11 @@ module.exports.UploadBook = async (req, res, next) => {
   //     price: data.price
   // })
 
-  // const status = book.save();
+  // const status = await book.save();
 
   // if(!status)
   //     return res.status(500).json({message: "Couldn't add A new Book"});
 
-  res.status(200).json({ message: "Success" });
+  res.status(200).json({ message: "Book Added" });
 
 }
