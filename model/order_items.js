@@ -1,22 +1,23 @@
 const {Schema, model} = require('mongoose');
 
 const orderItemsSchema = new Schema({
-    order_id:{
-        type: String,
-        require: true
+    order:{
+        type: Schema.Types.ObjectId,
+        ref: 'Orders',
+        required: true
     },
-    book_id: {
-        type: String,
-        require: true
+    book: {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
+        required: true
     },
     quantity:{
         type: Number,
-        require: true,
-    },
-    price: {
-        type: Number,
-        require: true
+        required: true,
     }
+},
+{
+    timestamps: true
 });
 
-module.exports = model('order_items', orderItemsSchema);
+module.exports = model('Order_Items', orderItemsSchema);

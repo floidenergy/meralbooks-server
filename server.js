@@ -12,18 +12,18 @@ const cors = require('cors')
 const AccountsRouter = require('./routes/Accounts');
 const MailSubscriptionRouter = require('./routes/subscription');
 const adminRouter = require('./routes/admin');
+const AutherRouter = require('./routes/Authors');
 
 const server = express();
 
 server.use(cookieParser());
 
-server.use(express.json({ limit: '20mb' }));
+server.use(express.json({ limit: '2mb' }));
 server.use(express.urlencoded({ extended: false }));
 
-// server.use(cors({
-//     origin: ["http://admin.localhost:3000", "http://localhost:3000"],
-//     credentials: true
-// }));
+// for image sharing folders
+server.use(express.static('./Uploads/Images/'))
+server.use(express.static('./public'))
 
 server.use(session({
     name: "merals.id",
@@ -50,6 +50,14 @@ server.use('/admin', cors({
     credentials: true
 }), adminRouter)
 
+
+server.use(cors({
+    origin: '*'
+}));
+
+server.use('/', AutherRouter)
+
+
 server.use(cors({
     origin: 'http://localhost:3002',
     credentials: true,
@@ -61,8 +69,8 @@ server.use('/', MailSubscriptionRouter);
 // Error handling
 server.use((err, req, res, next) => {
     if (err) {
-        console.log(err);
-        res.status(400).json(err.message);
+        console.log(`error: ${err}`);
+        res.status(500);
     }
     next();
 })

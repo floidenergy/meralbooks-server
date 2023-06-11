@@ -3,64 +3,46 @@ const {Schema, model} = require('mongoose');
 const bookSchema = new Schema({
     img:{
         type: String,
-        require: true
+        required: true
     },
     name:{
         type: String,
-        require: true
+        required: true
     },
     description:{
         type: String,
-        require: true
+        required: true
     },
     author:{
-        type: {
-            name:{
-                type: String,
-                require: true
-            },
-            id: {
-                type: String,
-                required: true
-            }
-        },
+        type: Schema.Types.ObjectId,
+        ref: 'Author',
         required: true
     },
     price:{
         type: Number,
-        require: true
+        required: true
     },
-    stock:{
-        type: [{
-            quantity: {
-                type: Number,
-                require: true
-            },
-            language:{
-                type: String,
-                require: true
-            }
-        }],
-        require: true
+    quantity: {
+        type: Number,
+        default: 0
     },
-    category:{
-        type: {
-            id: {
-                type: String,
-                require: true
-            }
-        },
-        require: true
+    language:{
+        type: String,
+        enum: ['Arabic', 'French', 'English'],
+        required: true
     },
-    review:{
-        type: [{
-            id: {
-                type: String,
-                require: true
-            }
-        }],
-        require: false
-    },
+    category:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    }],
+    review:[{
+        type: Schema.Types.ObjectId,
+        ref: 'bookReview'
+    }],
+},
+{
+    timestamps: true
 });
 
-module.exports = model('Books', bookSchema)
+module.exports = model('Book', bookSchema)

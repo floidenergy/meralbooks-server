@@ -5,38 +5,60 @@ const path = require('path')
 
 const router = Router();
 
-const { UploadBook, StoreImage } = require('../controllers/admin/books/UploadBook')
+const StoreImage = require('../controllers/util/StoreImage')
+
+const UploadBook = require('../controllers/admin/books/UploadBook')
+
+// Authors
+const UploadAuthor = require('../controllers/admin/author/UploadAuthor')
+const UpdateAuthor = require('../controllers/admin/author/UpdateAuthor')
+const DeleteAuthor = require('../controllers/admin/author/DeleteAuthor')
+
 
 router.post("/login", passport.authenticate('admin-local', {
     successMessage: "you have been succesfully connected",
     failureMessage: true
 }), (req, res, next) => {
-    // TODO: structure the data to send into the client side
-    console.log(req.session);
-    res.status(200).json(req.user);
+
+    const user = {
+        id: req.user.id,
+        name: {
+            fName: req.user.name.fName,
+            lName: req.user.name.lName
+        },
+        username: req.user.username,
+        email: req.user.email,
+        info: req.user.email,
+        profilePic: req.user.profilePic,
+        info: req.user.info
+    }
+    res.status(200).json(user);
 })
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads'); // Specify the destination directory
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
-    },
-});
+router.use((req, res, next) => {
+    if(!req.user){
+        console.log(res.user);
+        return res.sendStatus(511)
+    }
 
-const upload = multer({ storage });
-
-// Route to handle image upload
-router.post('/test', upload.single('file'), (req, res) => {
-    res.json({ message: 'Image uploaded successfully' });
-});
-
+    if (!req.user.isAdmin){
+        return res.status(403);
+    }else{
+        next();
+    }
+})
 
 // books
-router.route('/books')
-    .post(StoreImage, UploadBook);
+router.route('/book')
+    .post(StoreImage("./Uploads/images/book", 'bookPicture', "Book"), UploadBook);
+
+router.route('/author')
+    .post(StoreImage("./Uploads/images/author", "authorImage", 'Author'), UploadAuthor)
+    // .get(GetAuthors)
+
+router.route('/author/:id')
+    .put( StoreImage("./Uploads/Images/author", 'authorImage', "Author"), UpdateAuthor)
+    .delete(DeleteAuthor)
 
 
 module.exports = router;

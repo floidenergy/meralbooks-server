@@ -3,16 +3,15 @@ const {Schema, model} = require('mongoose');
 const categoriesModel = new Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
     },
     description:{
         type: String,
-        require: false
-    },
-    created_at:{
-        type: Date,
-        require: true
+        required: false
     }
+},
+{
+    timestamps: true
 });
 
-module.exports = model("categories", categoriesModel);
+module.exports = model("Category", categoriesModel);

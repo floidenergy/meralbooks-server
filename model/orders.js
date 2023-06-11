@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 /**
  * ------STATUS ENUM-------
@@ -14,55 +14,38 @@ const {Schema, model} = require('mongoose');
  */
 
 const orderSchema = new Schema({
-    user_id: {
-        type: String,
-        require: true
-    },
-    total_amount: {
-        type: String,
-        require: true
-    },
-    items:{
-        type: [string]
-    },
-    status: {
-        type: Number,
-        require: true
-    },
-    shipping_agency:{
-        type: Number,
-        require: true
-    },
-    shipping_info:{
-        type:{
-            address:{
-                type:{
-                    city:{
-                        type: String,
-                        require: true
-                    },
-                    wilaya:{
-                        type: String,
-                        require: true
-                    },
-                    town:{
-                        type: String,
-                        require: true
-                    }
-                },
-                require: true
-            },
-            phone:{
-                type: string,
-                require: true
-            }
-        },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
-    created_at:{
-        type: Date,
-        require: true
+    total_amount: {
+        type: Number,
+        required: true
+    },
+    items: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Order_Items',
+        required: true
+    }],
+    status: {
+        type: String,
+        enum: ['Preparing', 'Whent To Shipping', 'Delivered', "Done"],
+        default: 'Preparing'
+    },
+    shipping_agency: {
+        type: String,
+        enum: ['Yalidin', 'Coyot'],
+        required: true
+    },
+    shipping_info: {
+        type: Schema.Types.ObjectId,
+        ref: 'Shipping_Info',
+        required: true
     }
-});
+},
+    {
+        timestamps: true
+    });
 
-module.exports = model("orders", orderSchema);
+module.exports = model("Orders", orderSchema);

@@ -95,7 +95,6 @@ passport.use('admin-local',
 )
 
 passport.serializeUser((user, done) => {
-    console.log('serialize');
     done(null, user.id);
 });
 

@@ -20,8 +20,6 @@ AccountsRouter.post("/login", passport.authenticate('local', {
     failureMessage: true
 }), Login)
 
-AccountsRouter.route("/logout")
-    .get(Logout)
 
 //TODO: replace the error response with the next cb function
 //TODO: add the confirmation email here too
@@ -32,6 +30,16 @@ AccountsRouter.route('/register')
 AccountsRouter.route("/eConfirmation")
     .post(emailConfirmation)
 
+AccountsRouter.use((req, res, next) => {
+    if (!req.user) {
+        console.log(res.user);
+        return res.sendStatus(511)
+    }
+    next();
+});
+
+AccountsRouter.route("/logout")
+    .get(Logout)
 
 AccountsRouter.route('/profile-edit')
     .post(ProfileEdit)
