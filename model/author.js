@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose')
+const { Schema, model } = require('mongoose')
 
 const authorSchema = new Schema({
   img: {
@@ -17,13 +17,15 @@ const authorSchema = new Schema({
     type: Date,
     required: true
   },
-  books: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Book'
-  }]
+  books: {
+    type: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Book'
+    }]
+  }
 },
-{
-  timestamps: true
-});
+  {
+    timestamps: true
+  });
 
 module.exports = model('Author', authorSchema);

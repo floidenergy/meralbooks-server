@@ -10,7 +10,6 @@ const { SendConfirmationEmail } = require('../utils/emailConfimationReq');
 const AccountsRouter = Router();
 
 const { Login } = require('../controllers/UserAccount/login')
-const { Logout } = require('../controllers/UserAccount/logout')
 const { Register } = require('../controllers/UserAccount/register')
 const { emailConfirmation } = require('../controllers/UserAccount/eConfirmation');
 const { ProfileEdit } = require('../controllers/UserAccount/profileEdit')
@@ -32,14 +31,10 @@ AccountsRouter.route("/eConfirmation")
 
 AccountsRouter.use((req, res, next) => {
     if (!req.user) {
-        console.log(res.user);
-        return res.sendStatus(511)
+        return res.status(511);
     }
     next();
 });
-
-AccountsRouter.route("/logout")
-    .get(Logout)
 
 AccountsRouter.route('/profile-edit')
     .post(ProfileEdit)

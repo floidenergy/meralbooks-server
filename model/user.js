@@ -24,7 +24,7 @@ const userModel = new Schema({
     },
     dob:{
         type: Date,
-        required: false // TODO: make it true later on
+        required: true
     },
     profilePic:{
         type: String,

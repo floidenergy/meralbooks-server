@@ -8,6 +8,11 @@
 # testing
 /coverage
 
+
+#upload files
+/Uploads
+
+
 # production
 /build
 .exe

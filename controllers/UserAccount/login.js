@@ -15,8 +15,6 @@ const Login = (req, res, next) => {
       order_history: req.user.order_history
   }
 
-  // console.log(req.user);
-
   res.status(200).json(user);
 }
 

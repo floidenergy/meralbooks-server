@@ -1,16 +1,16 @@
 const fs = require('fs');
 const Book = require('../../../model/book')
-
-/** 
- * WHAT TO DO TOMORROW
- * 
- *  //TODO: adding category database and fix the book->category schema
- */
+const Author = require('../../../model/author')
 
 module.exports = async (req, res, next) => {
 
+  const book = await Book.findOne({ name: 'life of floidus' });
+  console.log(book);
+
+
   try {
-      
+
+    console.log(req.body);
 
     const data = req.body;
 
@@ -21,19 +21,16 @@ module.exports = async (req, res, next) => {
       author: data.author,
       price: data.price,
       language: data.language,
-      category: data.category
+      category: data.category,
+      price: data.price
     })
 
-    try {
-      await book.save();
-      res.status(200).json({ message: "Book Added" });
-    } catch (err) {
-      console.log(err);
-      fs.unlinkSync(req.file.path)
-      next({ message: "Couldn't add A new Book", code: 500 });
-    }
-
-  } catch (error) {
-    next(error)
+    await book.save();
+    await Author.findByIdAndUpdate(data.author, {$push: {books: book._id}});
+    res.status(200).json({ message: "Book Added" });
+  } catch (err) {
+    console.log(err);
+    fs.unlinkSync(req.file.path)
+    return res.status(400).json({ message: 'error happend' });
   }
 }

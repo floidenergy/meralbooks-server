@@ -3,10 +3,6 @@ const Author = require('../../../model/author');
 // const {} = require('../../../Uploads/Images/author')
 module.exports = async (req, res, next) => {
 
-  // console.log(`id: ${req.params.id}`);
-  
-
-  // return res.send('ok');
   try {
 
     const data = req.body;

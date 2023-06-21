@@ -7,12 +7,20 @@ const router = Router();
 
 const StoreImage = require('../controllers/util/StoreImage')
 
-const UploadBook = require('../controllers/admin/books/UploadBook')
+// Authors Functions
+const UploadAuthor = require('../controllers/admin/author/UploadAuthor');
+const UpdateAuthor = require('../controllers/admin/author/UpdateAuthor');
+const DeleteAuthor = require('../controllers/admin/author/DeleteAuthor');
 
-// Authors
-const UploadAuthor = require('../controllers/admin/author/UploadAuthor')
-const UpdateAuthor = require('../controllers/admin/author/UpdateAuthor')
-const DeleteAuthor = require('../controllers/admin/author/DeleteAuthor')
+// Categories Functions
+const UploadCategory = require('../controllers/admin/category/UploadCategory');
+const UpdateCategory = require('../controllers/admin/category/UpdateCategory');
+const DeleteCategory = require('../controllers/admin/category/DeleteCategory');
+
+// Books Functions
+const UploadBook = require('../controllers/admin/books/UploadBook');
+const UpdateBook = require('../controllers/admin/books/UpdateBook');
+const DeleteBook = require('../controllers/admin/books/DeleteBook');
 
 
 router.post("/login", passport.authenticate('admin-local', {
@@ -35,30 +43,42 @@ router.post("/login", passport.authenticate('admin-local', {
     res.status(200).json(user);
 })
 
+// Cheking For The Authentification
 router.use((req, res, next) => {
-    if(!req.user){
-        console.log(res.user);
+    if (!req.user) {
+        console.log(`user: ${res.user}`);
         return res.sendStatus(511)
     }
 
-    if (!req.user.isAdmin){
+    if (!req.user.isAdmin) {
         return res.status(403);
-    }else{
+    } else {
         next();
     }
 })
 
-// books
+// Books
 router.route('/book')
     .post(StoreImage("./Uploads/images/book", 'bookPicture', "Book"), UploadBook);
 
+router.route('/book/:id')
+    .put(StoreImage("./Uploads/images/book", 'bookPicture', "Book"), UpdateBook)
+    .delete(DeleteBook);
+
+// Authors
 router.route('/author')
     .post(StoreImage("./Uploads/images/author", "authorImage", 'Author'), UploadAuthor)
-    // .get(GetAuthors)
 
 router.route('/author/:id')
-    .put( StoreImage("./Uploads/Images/author", 'authorImage', "Author"), UpdateAuthor)
+    .put(StoreImage("./Uploads/Images/author", 'authorImage', "Author"), UpdateAuthor)
     .delete(DeleteAuthor)
 
+// Categories
+router.route('/category')
+    .post(UploadCategory)
+
+router.route('/category/:id')
+    .delete(DeleteCategory)
+    .put(UpdateCategory)
 
 module.exports = router;

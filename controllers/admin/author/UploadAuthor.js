@@ -7,7 +7,6 @@ module.exports = async (req, res, next) => {
 
     const data = req.body;
 
-    console.log(data);
     const newAuthor = new Author({
       img: `${process.env.SERVER_LINK}/author/${req.file.filename}`,
       name: data.name,

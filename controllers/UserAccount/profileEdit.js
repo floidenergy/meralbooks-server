@@ -54,8 +54,6 @@ module.exports.ProfileEdit = async (req, res, next) => {
 
     const result = await User.findByIdAndUpdate(req.user.id, newData);
 
-    console.log(result);
-
     const user = {
         id: result.id,
         name: {

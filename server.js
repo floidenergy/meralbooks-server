@@ -12,7 +12,11 @@ const cors = require('cors')
 const AccountsRouter = require('./routes/Accounts');
 const MailSubscriptionRouter = require('./routes/subscription');
 const adminRouter = require('./routes/admin');
-const AutherRouter = require('./routes/Authors');
+
+const { Logout } = require('./controllers/UserAccount/logout')
+
+
+const GettersRouter = require('./routes/Getters');
 
 const server = express();
 
@@ -21,7 +25,7 @@ server.use(cookieParser());
 server.use(express.json({ limit: '2mb' }));
 server.use(express.urlencoded({ extended: false }));
 
-// for image sharing folders
+// for public image sharing folders
 server.use(express.static('./Uploads/Images/'))
 server.use(express.static('./public'))
 
@@ -45,26 +49,32 @@ require('./utils/passport');
 server.use(passport.initialize());
 server.use(passport.session());
 
+server.get("/logout", cors({
+        origin: ['http://localhost:3002', 'http://localhost:3000'],
+        credentials: true
+    }), Logout)
+
+// Admin related routes
 server.use('/admin', cors({
     origin: 'http://localhost:3002',
     credentials: true
 }), adminRouter)
 
-
-server.use(cors({
-    origin: '*'
-}));
-
-server.use('/', AutherRouter)
+// Getters router
+server.use('/', cors({
+    origin: 'http://localhost:3002'
+}), GettersRouter);
 
 
-server.use(cors({
+
+server.use('/', cors({
     origin: 'http://localhost:3002',
     credentials: true,
-}));
-
-server.use('/', AccountsRouter);
-server.use('/', MailSubscriptionRouter);
+}), AccountsRouter);
+server.use('/', cors({
+    origin: 'http://localhost:3002',
+    credentials: true,
+}), MailSubscriptionRouter);
 
 // Error handling
 server.use((err, req, res, next) => {
