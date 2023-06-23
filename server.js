@@ -50,9 +50,9 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 server.get("/logout", cors({
-        origin: ['http://localhost:3002', 'http://localhost:3000'],
-        credentials: true
-    }), Logout)
+    origin: ['http://localhost:3002', 'http://localhost:3000'],
+    credentials: true
+}), Logout)
 
 // Admin related routes
 server.use('/admin', cors({
@@ -61,9 +61,7 @@ server.use('/admin', cors({
 }), adminRouter)
 
 // Getters router
-server.use('/', cors({
-    origin: 'http://localhost:3002'
-}), GettersRouter);
+server.use('/', GettersRouter);
 
 
 
@@ -76,11 +74,15 @@ server.use('/', cors({
     credentials: true,
 }), MailSubscriptionRouter);
 
+server.get('/', (req, res, next) => {
+    res.send('welcome to meralbooks backend server')
+})
+
 // Error handling
 server.use((err, req, res, next) => {
     if (err) {
-        console.log(`error: ${err}`);
-        res.status(500);
+        console.log(`error: ${err.message}`);
+        res.status(500).json({ message: err?.message });
     }
     next();
 })

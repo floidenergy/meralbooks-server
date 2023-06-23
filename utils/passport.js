@@ -7,7 +7,7 @@ const User = require("../model/user");
 const { validatePassword } = require("./passwordUtils");
 const { SendConfirmationEmail } = require('./emailConfimationReq');
 
-
+// client authentication
 passport.use(
     new LocalStrategy(async (username, password, done) => {
         const resultUser = await User.findOne({
@@ -49,6 +49,7 @@ passport.use(
     })
 );
 
+//admin authentication
 passport.use('admin-local',
     new LocalStrategy(async (username, password, done) => {
         const resultUser = await User.findOne({
