@@ -18,7 +18,7 @@
   "devDependencies": {
     "nodemon": "^2.0.22"
   },
-  "name": "meralBooks backend server",
+  "name": "meralbooks_backend_server",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
