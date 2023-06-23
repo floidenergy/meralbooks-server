@@ -95,3 +95,5 @@ mongoose.connect(process.env.DB_STRING, {
         console.log('connected to the database');
         server.listen(3001, () => console.log("listening on port 3001"));
     }).catch(err => console.log(err));
+
+module.exports = server;
