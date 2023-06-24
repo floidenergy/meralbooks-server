@@ -23,7 +23,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon --exec \"clear && node server.js\""
+    "dev": "nodemon --exec \"cls && node server.js\""
   },
   "keywords": [],
   "author": "floidenergy",
