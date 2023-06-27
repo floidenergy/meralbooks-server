@@ -1,6 +1,7 @@
 const User = require("../../model/user");
 
 const Register = async (req, res, next) => {
+    console.log("register function");
   const { fName, lName, username, email, password, gender } = req.body;
   const usernameExist = await User.findOne({ username: username });
   if (usernameExist)

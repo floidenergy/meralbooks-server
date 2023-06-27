@@ -34,7 +34,7 @@ server.use(session({
     saveUninitialized: true,
     store: new MongoStorage({
         mongoUrl: process.env.DB_STRING,
-        dbName: 'meralBooks',
+        dbName: 'test',
         collectionName: 'sessions'
     }),
     cookie: {
@@ -46,7 +46,7 @@ server.use(session({
          *  1 hour * 24 to give 1 day
          *  1 day * 30 to give 1 month
          */
-        maxAge: 1000 * 60 * 60 * 24 * 30 
+        maxAge: 1000 * 60 * 60 * 24 * 30
     }
 }));
 
@@ -60,22 +60,27 @@ server.use(passport.session());
 server.use('/api', cors({ origin: "*" }), apiRouter);
 
 server.get("/logout", cors({
-    origin: 'http://localhost:3002',
+    origin: 'https://649ac709295e6102518cf07f--creative-llama-4b9a06.netlify.app/',
     credentials: true
 }), Logout)
 
 // Admin related routes
 server.use('/admin', cors({
-    origin: 'http://localhost:3002',
+    origin: 'https://649ac709295e6102518cf07f--creative-llama-4b9a06.netlify.app/',
     credentials: true
 }), adminRouter)
 
 
 
 server.use('/account', cors({
-    origin: 'http://localhost:3002',
-    credentials: true,
+    origin: 'https://649ac709295e6102518cf07f--creative-llama-4b9a06.netlify.app/',
+    credentials: true
 }), AccountsRouter);
+
+server.use((req, res, next) =>{
+    console.log("passed here");
+    next();
+})
 
 server.get('/', cors({
     origin: '*'
@@ -99,7 +104,8 @@ server.use((err, req, res, next) => {
 
 mongoose.connect(process.env.DB_STRING, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    dbName: 'test'
 })
     .then(() => {
         console.log('connected to the database');

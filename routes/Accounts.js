@@ -19,7 +19,6 @@ AccountsRouter.post("/login", passport.authenticate('local', {
     failureMessage: true
 }), Login)
 
-
 //TODO: replace the error response with the next cb function
 //TODO: add the confirmation email here too
 AccountsRouter.route('/register')
