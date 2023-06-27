@@ -10,13 +10,11 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors')
 
 const AccountsRouter = require('./routes/Accounts');
-const MailSubscriptionRouter = require('./routes/subscription');
 const adminRouter = require('./routes/admin');
+const apiRouter = require('./routes/api')
 
 const { Logout } = require('./controllers/UserAccount/logout')
 
-
-const GettersRouter = require('./routes/Getters');
 
 const server = express();
 
@@ -40,7 +38,15 @@ server.use(session({
         collectionName: 'sessions'
     }),
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24
+        /**
+         * maxAge property is in milisecond
+         *  so get 1000 for a second
+         *  1 second * 60 to give 1 minute
+         *  1 minute * 60 to give 1 hour
+         *  1 hour * 24 to give 1 day
+         *  1 day * 30 to give 1 month
+         */
+        maxAge: 1000 * 60 * 60 * 24 * 30 
     }
 }));
 
@@ -49,8 +55,12 @@ require('./utils/passport');
 server.use(passport.initialize());
 server.use(passport.session());
 
+
+// Getters router
+server.use('/api', cors({ origin: "*" }), apiRouter);
+
 server.get("/logout", cors({
-    origin: ['http://localhost:3002', 'http://localhost:3000'],
+    origin: 'http://localhost:3002',
     credentials: true
 }), Logout)
 
@@ -60,21 +70,21 @@ server.use('/admin', cors({
     credentials: true
 }), adminRouter)
 
-// Getters router
-server.use('/', GettersRouter);
 
 
-
-server.use('/', cors({
+server.use('/account', cors({
     origin: 'http://localhost:3002',
     credentials: true,
 }), AccountsRouter);
-server.use('/', cors({
-    origin: 'http://localhost:3002',
-    credentials: true,
-}), MailSubscriptionRouter);
 
-server.get('/', (req, res, next) => {
+server.get('/', cors({
+    origin: '*'
+}), (req, res, next) => {
+
+    console.log(new Date(Math.floor((1687844682930 / 100) - 60 * 60)));
+    console.log(Math.floor((1687844682930 / 1000) - 60 * 60));
+    console.log(new Date(1687844682930));
+
     res.send('welcome to meralbooks backend server')
 })
 

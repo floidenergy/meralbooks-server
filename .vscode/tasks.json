@@ -5,8 +5,7 @@
 			"label": "meralbooks server Dev",
 			"type": "shell",
 			"group": {
-				"kind": "test",
-				"isDefault": true
+				"kind": "test"
 			},
 			"presentation": {
 				"echo": true,
@@ -14,7 +13,7 @@
 				"panel": "new",
 				"clear": false
 			},
-			"windows":{
+			"windows": {
 				"command": "start npm run dev"
 			},
 			"problemMatcher": []
@@ -27,7 +26,7 @@
 				"echo": true,
 				"reveal": "always",
 				"focus": false,
-				"panel": "shared",
+				"panel": "new",
 				"showReuseMessage": true,
 				"clear": false
 			},
@@ -35,7 +34,7 @@
 				"options": {
 					"cwd": "C:\\Program Files\\MongoDB\\Server\\6.0\\bin"
 				},
-				"command": "mongod --dbpath=c:\\data\\db"
+				"command": "start mongod --dbpath=c:\\data\\db"
 			},
 			"linux": {
 				"command": "sudo mongod"

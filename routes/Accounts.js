@@ -31,7 +31,7 @@ AccountsRouter.route("/eConfirmation")
 
 AccountsRouter.use((req, res, next) => {
     if (!req.user) {
-        return res.status(511);
+        return res.sendStatus(511);
     }
     next();
 });

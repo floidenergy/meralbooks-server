@@ -2,6 +2,7 @@ const Author = require('../../model/author');
 
 module.exports = async (req, res, next) => {
   try {
+    console.log(`id: ${req.params.id}`);
 
     const author = await Author.findById(req.params.id);
     if (author.books.length !== 0)
