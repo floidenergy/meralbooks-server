@@ -60,20 +60,20 @@ server.use(passport.session());
 server.use('/api', cors({ origin: "*" }), apiRouter);
 
 server.get("/logout", cors({
-    origin: 'https://649ac709295e6102518cf07f--creative-llama-4b9a06.netlify.app/',
+    origin: process.env.ALLOWED_ORIGIN.split(', '),
     credentials: true
 }), Logout)
 
 // Admin related routes
 server.use('/admin', cors({
-    origin: 'https://649ac709295e6102518cf07f--creative-llama-4b9a06.netlify.app/',
+    origin: process.env.ALLOWED_ORIGIN.split(', '),
     credentials: true
 }), adminRouter)
 
 
 
 server.use('/account', cors({
-    origin: 'https://649ac709295e6102518cf07f--creative-llama-4b9a06.netlify.app/',
+    origin: process.env.ALLOWED_ORIGIN.split(', '),
     credentials: true
 }), AccountsRouter);
 
