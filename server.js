@@ -46,7 +46,10 @@ server.use(session({
          *  1 hour * 24 to give 1 day
          *  1 day * 30 to give 1 month
          */
-        maxAge: 1000 * 60 * 60 * 24 * 30
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        httpOnly: false,
+        secure: true,
+        domain: '.floidenergy.tech'
     }
 }));
 

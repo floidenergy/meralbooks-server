@@ -48,8 +48,7 @@ router.post("/login", passport.authenticate('admin-local', {
 
 // Cheking For The Authentification
 router.use((req, res, next) => {
-    // console.log(`Admin user: ${JSON.stringify(req.session)}`);
-    
+    console.log(`Admin user: ${req.user}`);
     if (!req.user) {
         return res.sendStatus(511)
     }
