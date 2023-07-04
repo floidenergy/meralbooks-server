@@ -48,7 +48,8 @@ server.use(session({
          */
         maxAge: 1000 * 60 * 60 * 24 * 30,
         httpOnly: true,
-        secure: false,
+        secure: true,
+        sameSite: 'none'
         // domain: 'localhost:3002'
     }
 }));
