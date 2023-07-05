@@ -13,7 +13,8 @@ const AccountsRouter = require('./routes/Accounts');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api')
 
-const { Logout } = require('./controllers/UserAccount/logout')
+const { Logout } = require('./controllers/UserAccount/logout');
+const { json } = require('body-parser');
 
 
 const server = express();
@@ -27,6 +28,7 @@ server.use(express.urlencoded({ extended: false }));
 server.use(express.static('./Uploads/Images/'))
 server.use(express.static('./public'))
 
+
 server.use(session({
     name: "merals.id",
     secret: process.env.SESSION_SECRET,
@@ -37,21 +39,22 @@ server.use(session({
         dbName: 'test',
         collectionName: 'sessions'
     }),
-    cookie: {
-        /**
-         * maxAge property is in milisecond
-         *  so get 1000 for a second
-         *  1 second * 60 to give 1 minute
-         *  1 minute * 60 to give 1 hour
-         *  1 hour * 24 to give 1 day
-         *  1 day * 30 to give 1 month
-         */
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        httpOnly: false,
-        // secure: true,
-        // sameSite: 'none'
-        // domain: 'localhost:3002'
-    }
+    cookie: JSON.parse(process.env.COOKIE_OBJECT)
+    // {
+    //     /**
+    //      * maxAge property is in milisecond
+    //      *  so get 1000 for a second
+    //      *  1 second * 60 to give 1 minute
+    //      *  1 minute * 60 to give 1 hour
+    //      *  1 hour * 24 to give 1 day
+    //      *  1 day * 30 to give 1 month
+    //      */
+    //     maxAge: 1000 * 60 * 60 * 24 * 30,
+    //     JSON.Parse(process.env)
+    //     // secure: true,
+    //     // sameSite: 'none'
+    //     // domain: 'localhost:3002'
+    // }
 }));
 
 require('./utils/passport');
