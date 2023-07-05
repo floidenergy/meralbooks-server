@@ -47,7 +47,7 @@ server.use(session({
          *  1 day * 30 to give 1 month
          */
         maxAge: 1000 * 60 * 60 * 24 * 30,
-        httpOnly: true,
+        httpOnly: false,
         // secure: true,
         // sameSite: 'none'
         // domain: 'localhost:3002'
