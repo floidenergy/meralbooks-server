@@ -1,8 +1,8 @@
 const User = require("../../model/user");
-
+const {genPassword, validatePassword} = require("../../utils/passwordUtils")
+const {SendConfirmationEmail} = require("../../utils/emailConfimationReq")
 const Register = async (req, res, next) => {
-    console.log("register function");
-  const { fName, lName, username, email, password, gender } = req.body;
+  const { fName, lName, username, email, password, gender, dob } = req.body;
   const usernameExist = await User.findOne({ username: username });
   if (usernameExist)
       return res.json({ message: "Username Already Taken" });
@@ -15,18 +15,30 @@ const Register = async (req, res, next) => {
       return res.json({ message: "please provide a valid data" });
 
   const userSecret = genPassword(password);
-  const newUser = new User({
-      name: {
-          fName: fName,
-          lName: lName
-      },
-      username: username,
-      email: email,
-      gender: gender,
-      hash: userSecret.hash,
-      salt: userSecret.salt,
-      created_at: new Date()
-  })
+//   const newUser = new User({
+//       name: {
+//           fName: fName,
+//           lName: lName
+//       },
+//       username: username,
+//       email: email,
+//       gender: gender,
+
+//       hash: userSecret.hash,
+//       salt: userSecret.salt,
+//   })
+    const newUser = new User({
+        name: {
+            fName,
+            lName
+        },
+        username,
+        email,
+        gender,
+        dob,
+        hash: userSecret.hash,
+        salt: userSecret.salt
+    })
 
   const result = await newUser.save();
 

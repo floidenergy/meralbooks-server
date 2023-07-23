@@ -14,7 +14,7 @@
 				"clear": false
 			},
 			"windows": {
-				"command": "npm run dev"
+				"command": "start npm run dev"
 			},
 			"problemMatcher": []
 		},

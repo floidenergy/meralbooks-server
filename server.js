@@ -1,5 +1,7 @@
 require('dotenv').config()
 const express = require('express');
+// const https = require("https");
+// const fs = require('fs');
 
 const session = require("express-session");
 const mongoose = require('mongoose');
@@ -14,10 +16,10 @@ const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api')
 
 const { Logout } = require('./controllers/UserAccount/logout');
-const { json } = require('body-parser');
-
 
 const server = express();
+
+server.set('trust proxy', 1);
 
 server.use(cookieParser());
 
@@ -36,25 +38,24 @@ server.use(session({
     saveUninitialized: true,
     store: new MongoStorage({
         mongoUrl: process.env.DB_STRING,
-        dbName: 'test',
+        dbName: 'meralBooks',
         collectionName: 'sessions'
     }),
-    cookie: JSON.parse(process.env.COOKIE_OBJECT)
-    // {
-    //     /**
-    //      * maxAge property is in milisecond
-    //      *  so get 1000 for a second
-    //      *  1 second * 60 to give 1 minute
-    //      *  1 minute * 60 to give 1 hour
-    //      *  1 hour * 24 to give 1 day
-    //      *  1 day * 30 to give 1 month
-    //      */
-    //     maxAge: 1000 * 60 * 60 * 24 * 30,
-    //     JSON.Parse(process.env)
-    //     // secure: true,
-    //     // sameSite: 'none'
-    //     // domain: 'localhost:3002'
-    // }
+    cookie:
+    {
+        /**
+         * maxAge property is in milisecond
+         *  so get 1000 for a second
+         *  1 second * 60 to give 1 minute
+         *  1 minute * 60 to give 1 hour
+         *  1 hour * 24 to give 1 day
+         *  1 day * 30 to give 1 month
+         */
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+    }
 }));
 
 require('./utils/passport');
@@ -77,14 +78,12 @@ server.use('/admin', cors({
     credentials: true
 }), adminRouter)
 
-
-
 server.use('/account', cors({
     origin: process.env.ALLOWED_ORIGIN.split(', '),
     credentials: true
 }), AccountsRouter);
 
-server.use((req, res, next) =>{
+server.use((req, res, next) => {
     console.log("passed here");
     next();
 })
@@ -92,11 +91,6 @@ server.use((req, res, next) =>{
 server.get('/', cors({
     origin: '*'
 }), (req, res, next) => {
-
-    console.log(new Date(Math.floor((1687844682930 / 100) - 60 * 60)));
-    console.log(Math.floor((1687844682930 / 1000) - 60 * 60));
-    console.log(new Date(1687844682930));
-
     res.send('welcome to meralbooks backend server')
 })
 
@@ -109,14 +103,22 @@ server.use((err, req, res, next) => {
     next();
 })
 
-mongoose.connect(process.env.DB_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: 'test'
-})
-    .then(() => {
-        console.log('connected to the database');
-        server.listen(3001, () => console.log("listening on port 3001"));
-    }).catch(err => console.log(err));
+// const sslServer = https.createServer({
+//     key: fs.readFileSync('./key/key.pem'),
+//     cert: fs.readFileSync('./key/cert.pem')
+// }, server)
 
-module.exports = server;
+// mongoose.connect(process.env.DB_STRING, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     dbName: 'test'
+// })
+//     .then(() => {
+//         console.log('connected to the database');
+//         sslServer.listen(3000, () => console.log("listening on port 3000"))
+//         // server.listen(3000, () => console.log("listening on port 3000"));
+//     }).catch(err => console.log(err));
+
+
+module.exports.mongoose = mongoose;
+module.exports.server = server;
