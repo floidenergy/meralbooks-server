@@ -83,11 +83,6 @@ server.use('/account', cors({
     credentials: true
 }), AccountsRouter);
 
-server.use((req, res, next) => {
-    console.log("passed here");
-    next();
-})
-
 server.get('/', cors({
     origin: '*'
 }), (req, res, next) => {

@@ -19,6 +19,13 @@
 
 # .env
 
+# public files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+
 # misc
 .DS_Store
 .env.local
