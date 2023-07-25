@@ -1,12 +1,13 @@
 const multer = require('multer');
 const path = require('path')
-
+const fs = require('fs')
 
 module.exports = (_path, fileInput, type) => {
 
 
   const bookImageStorage = multer.diskStorage({
     destination: (req, file, cb) => {
+      fs.mkdirSync(_path, {recursive: true})
       cb(null, _path);
     },
     filename: (req, file, cb) => {
