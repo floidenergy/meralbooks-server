@@ -1,19 +1,46 @@
 const fs = require('fs');
+const path = require('path')
+const sharp = require('sharp');
+const { DeleteObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3')
+
+const s3 = require('../../../utils/s3');
 const Author = require('../../../model/author');
-// const {} = require('../../../Uploads/Images/author')
+
 module.exports = async (req, res, next) => {
 
   try {
 
     const data = req.body;
-  
+
+    /**
+     * @old_img : Author-1690371947960.jpg
+     */
+
     const author = await Author.findById(req.params.id);
-    if(req.file){
-      if(author.img){
-        fs.unlinkSync(`./Uploads/Images/Author/${author.img.split('/')[4]}`)
+    if (req.file) {
+      if (author.img != undefined) {
+        console.log("deleting image");
+        const deleteCommand = new DeleteObjectCommand({
+          Bucket: process.env.CYCLIC_BUCKET_NAME,
+          Key: author.img
+        });
+        s3.send(deleteCommand);
       }
-      author.img = `${process.env.SERVER_LINK}/author/${req.file.filename}`;
+      
+      //upload img into aws.s3 bucket
+      author.img = "Author" + "-" + Date.now() + path.extname(req.file.originalname);
+
+      const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
+
+      const putCommand = new PutObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Body: imgBuffer,
+        Key: author.img
+      })
+      
+      s3.send(putCommand);
     }
+
 
     author.name = data.name;
     author.dob = data.dob;

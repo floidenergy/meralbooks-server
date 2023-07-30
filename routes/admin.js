@@ -23,8 +23,9 @@ const UpdateBook = require('../controllers/admin/books/UpdateBook');
 const DeleteBook = require('../controllers/admin/books/DeleteBook');
 
 // Supplies Functions
-const setSupplies = require('../controllers/admin/books/supply');
-const getSupplies = require('../controllers/admin/books/getSupplies');
+const setSupplies = require('../controllers/admin/supply/uploadSupply');
+const getSupplies = require('../controllers/admin/supply/getSupplies');
+const getSuppliesById = require('../controllers/admin/supply/getSuppliesById');
 
 router.post("/login", passport.authenticate('admin-local', {
     successMessage: "you have been succesfully connected",
@@ -86,5 +87,8 @@ router.route('/category/:id')
 router.route('/supply')
     .get(getSupplies)
     .put(setSupplies)
+
+router.route('/supply/:id')
+    .get(getSuppliesById);
 
 module.exports = router;

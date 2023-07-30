@@ -1,19 +1,29 @@
-const fs = require('fs');
-const Book = require('../../../model/book')
-const Author = require('../../../model/author')
+const sharp = require('sharp');
+const path = require('path');
+const {PutObjectCommand} = require('@aws-sdk/client-s3');
+
+const Book = require('../../../model/book');
+const Author = require('../../../model/author');
+const s3 = require('../../../utils/s3');
 
 module.exports = async (req, res, next) => {
-
-  const book = await Book.findOne({ name: 'life of floidus' });
-  console.log(book);
-
-
   try {
 
     const data = req.body;
 
+    const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
+    const imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
+
+    const putCommand = new PutObjectCommand({
+      Bucket: process.env.CYCLIC_BUCKET_NAME,
+      Body: imgBuffer,
+      Key: imgName
+    });
+
+    s3.send(putCommand);
+
     const book = new Book({
-      img: `${process.env.SERVER_LINK}/book/${req.file.filename}`,
+      img: imgName,
       name: data.name,
       description: data.description,
       author: data.author,
