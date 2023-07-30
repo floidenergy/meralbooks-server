@@ -66,6 +66,8 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 
+console.log(process.env.ALLOWED_ORIGIN.split(', '));
+
 // Getters router
 server.use('/api', cors({ origin: "*" }), apiRouter);
 
