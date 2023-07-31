@@ -23,6 +23,17 @@ module.exports = async (req, res, next) => {
       Key: author.img
     });
 
+    for(const book of author.books){
+      const getCommand = new GetObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: book.img
+      });
+  
+      book.img = await getSignedUrl(s3, getCommand, {expiresIn: 120});
+    }
+
+    console.log(author);
+
     author.img = await getSignedUrl(s3, getCommand, { expiresIn: 120 });
 
     res.status(200).json({ ...author._doc, UTCdob: author.dob.toUTCString().substring(0, 16) })

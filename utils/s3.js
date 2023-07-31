@@ -16,7 +16,7 @@
 
 const AWS = require('@aws-sdk/client-s3')
 
-if(process.env.envirement === 'dev'){
+if(process.env.ENVIREMENT === 'dev'){
 
   // module.exports = new S3Client({
   //   credentials: {
