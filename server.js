@@ -102,22 +102,5 @@ server.use((err, req, res, next) => {
     next();
 })
 
-// const sslServer = https.createServer({
-//     key: fs.readFileSync('./key/key.pem'),
-//     cert: fs.readFileSync('./key/cert.pem')
-// }, server)
-
-// mongoose.connect(process.env.DB_STRING, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     dbName: 'test'
-// })
-//     .then(() => {
-//         console.log('connected to the database');
-//         sslServer.listen(3000, () => console.log("listening on port 3000"))
-//         // server.listen(3000, () => console.log("listening on port 3000"));
-//     }).catch(err => console.log(err));
-
-
 module.exports.mongoose = mongoose;
 module.exports.server = server;

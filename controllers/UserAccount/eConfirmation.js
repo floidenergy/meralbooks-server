@@ -12,6 +12,7 @@ module.exports.emailConfirmation = async (req, res, next) => {
         }
 
         if (user.privacyToken.includes(token)) {
+            console.log("**Email Confirmation**");
             console.log("token already exist");
             throw new Error("Your Link has Expired Please Login To Request A New Link.");
         }
@@ -20,6 +21,7 @@ module.exports.emailConfirmation = async (req, res, next) => {
 
         res.status(200).json({ message: "You Successfuly Confirmed Your Email." });
     } catch (err) {
+        console.log("**Catched error on email confirmation**")
         console.log(err.message);
         res.status(401).json({ message: "Your Link has Expired Please Login To Request A New Link." });
     }

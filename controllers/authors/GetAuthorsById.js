@@ -8,7 +8,6 @@ module.exports = async (req, res, next) => {
   try {
 
     const author = await Author.findById(req.params.id);
-    // console.log(author);
     if (author.books.length !== 0)
       await author.populate('books')
 
@@ -31,8 +30,6 @@ module.exports = async (req, res, next) => {
   
       book.img = await getSignedUrl(s3, getCommand, {expiresIn: 120});
     }
-
-    console.log(author);
 
     author.img = await getSignedUrl(s3, getCommand, { expiresIn: 120 });
 

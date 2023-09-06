@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
     await newSupply.save();
     res.sendStatus(200)
   } catch (err) {
-    console.log("supply error");
+    console.log("**Upload Supply**");
     console.log(err);
     res.sendStatus(500);
   }

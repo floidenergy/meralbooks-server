@@ -19,7 +19,6 @@ module.exports = async (req, res, next) => {
     const author = await Author.findById(req.params.id);
     if (req.file) {
       if (author.img != undefined) {
-        console.log("deleting image");
         const deleteCommand = new DeleteObjectCommand({
           Bucket: process.env.CYCLIC_BUCKET_NAME,
           Key: author.img

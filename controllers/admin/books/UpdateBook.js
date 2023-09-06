@@ -5,7 +5,7 @@ const fs = require('fs')
 module.exports = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id);
-    console.log(req.body);
+
 
     if (req.file) {
       if (book.img) {
@@ -25,6 +25,7 @@ module.exports = async (req, res, next) => {
       author.books.push(book._id);
       await author.save()
     } else {
+      console.log('**update book**');
       console.log(`${book.name} is already in ${author.name}`);
     }
 
