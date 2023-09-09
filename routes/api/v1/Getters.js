@@ -11,8 +11,6 @@ const getBooksById = require('../../../controllers/books/GetBookById');
 
 const router = Router();
 
-
-
 router.route('/books')
   .get(getBooks);
 
@@ -30,5 +28,7 @@ router.route('/category')
 
 router.route('/category/:id')
   .get(GetCategoryById);
+
+
 
 module.exports = router;

@@ -14,6 +14,7 @@ const cors = require('cors')
 const AccountsRouter = require('./routes/Accounts');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api')
+const StoreRoute = require('./routes/Store')
 
 const { Logout } = require('./controllers/UserAccount/logout');
 
@@ -86,6 +87,10 @@ server.use('/account', cors({
     origin: process.env.ALLOWED_ORIGIN.split(', '),
     credentials: true
 }), AccountsRouter);
+
+server.use("/", cors({
+    origin: process.env.ALLOWED_ORIGIN.split(', ')
+}), StoreRoute)
 
 server.get('/', cors({
     origin: '*'
