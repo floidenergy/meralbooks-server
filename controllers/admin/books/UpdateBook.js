@@ -1,6 +1,5 @@
 const Author = require('../../../model/author');
 const Book = require('../../../model/book');
-const fs = require('fs')
 
 module.exports = async (req, res, next) => {
   try {
@@ -9,7 +8,7 @@ module.exports = async (req, res, next) => {
 
     if (req.file) {
       if (book.img) {
-        fs.unlinkSync(`./Uploads/Images/Author/${book.img.split('/')[4]}`)
+        // fs.unlinkSync(`./Uploads/Images/Author/${book.img.split('/')[4]}`)
       }
       book.img = `${process.env.SERVER_LINK}/book/${req.file.filename}`;
     }
