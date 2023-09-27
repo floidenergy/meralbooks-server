@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Key: book.img
       })
-      s3.send(deleteCommand);
+      await s3.send(deleteCommand);
     } catch (error) { }
 
     await book.deleteOne();

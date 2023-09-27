@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
           Bucket: process.env.CYCLIC_BUCKET_NAME,
           Key: author.img
         });
-        s3.send(deleteCommand);
+        await s3.send(deleteCommand);
       }
       
       //upload img into aws.s3 bucket
@@ -36,7 +36,7 @@ module.exports = async (req, res, next) => {
         Key: author.img
       })
       
-      s3.send(putCommand);
+      await s3.send(putCommand);
     }
 
 

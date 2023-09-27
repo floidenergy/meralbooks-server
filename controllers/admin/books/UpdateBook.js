@@ -11,6 +11,7 @@ module.exports = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id);
 
+    let imgName;
 
     if (req.file) {
       // if (book.img) {
@@ -22,23 +23,22 @@ module.exports = async (req, res, next) => {
         Key: book.img
       });
       s3.send(deleteCommand);
-
+      imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
       const imgBuffer = await sharp(req.file.buffer).resize({ height: 1920, width: 1080, fit: "cover" }).toBuffer();
-      const imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
-      book.img = imgName;
       const putCommand = new PutObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Body: imgBuffer,
         Key: imgName
       });
-
-
+      
+      
       s3.send(putCommand);
-
+      
     }
-
-
-
+    
+    
+    
+    book.img = imgName;
     // ||====> **Update book from author** <====||
 
     // ====> delete book from the first author
@@ -66,7 +66,7 @@ module.exports = async (req, res, next) => {
     book.description = req.body.description;
 
 
-    await book.save();
+    book.save();
 
     res.status(200).send('ok');
   } catch (error) {
