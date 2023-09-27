@@ -1,3 +1,9 @@
+const path = require('path');
+const sharp = require('sharp');
+const {PutObjectCommand} = require('@aws-sdk/client-s3');
+
+const s3 = require('../../../utils/s3');
+
 const Author = require('../../../model/author');
 const Book = require('../../../model/book');
 
@@ -7,11 +13,25 @@ module.exports = async (req, res, next) => {
 
 
     if (req.file) {
-      if (book.img) {
-        // fs.unlinkSync(`./Uploads/Images/Author/${book.img.split('/')[4]}`)
-      }
-      book.img = `${process.env.SERVER_LINK}/book/${req.file.filename}`;
+      // if (book.img) {
+      //   // fs.unlinkSync(`./Uploads/Images/Author/${book.img.split('/')[4]}`)
+      // }
+      // book.img = `${process.env.SERVER_LINK}/book/${req.file.filename}`;
+
+      const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
+      const imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
+      const putCommand = new PutObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Body: imgBuffer,
+        Key: imgName
+      });
+  
+      s3.send(putCommand);
+
+      book.img = imgName;
     }
+
+
 
     // ||====> **Update book from author** <====||
 
