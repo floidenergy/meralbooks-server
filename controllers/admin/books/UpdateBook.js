@@ -1,6 +1,6 @@
 const path = require('path');
 const sharp = require('sharp');
-const {PutObjectCommand} = require('@aws-sdk/client-s3');
+const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const s3 = require('../../../utils/s3');
 
@@ -17,18 +17,24 @@ module.exports = async (req, res, next) => {
       //   // fs.unlinkSync(`./Uploads/Images/Author/${book.img.split('/')[4]}`)
       // }
       // book.img = `${process.env.SERVER_LINK}/book/${req.file.filename}`;
+      const deleteCommand = new DeleteObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: book.img
+      });
+      s3.send(deleteCommand);
 
-      const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
+      const imgBuffer = await sharp(req.file.buffer).resize({ height: 1920, width: 1080, fit: "cover" }).toBuffer();
       const imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
+      book.img = imgName;
       const putCommand = new PutObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Body: imgBuffer,
         Key: imgName
       });
-  
+
+
       s3.send(putCommand);
 
-      book.img = imgName;
     }
 
 
@@ -59,9 +65,10 @@ module.exports = async (req, res, next) => {
     book.price = req.body.price;
     book.description = req.body.description;
 
+
     await book.save();
 
-    res.send('ok');
+    res.status(200).send('ok');
   } catch (error) {
     console.log(error);
   }

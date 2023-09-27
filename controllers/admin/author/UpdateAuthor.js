@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path')
 const sharp = require('sharp');
 const { DeleteObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3')
