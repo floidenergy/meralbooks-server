@@ -12,18 +12,31 @@ module.exports = async (req, res, next) => {
 
     const data = req.body;
     const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
-    const imgName = "Author" + "-" + Date.now() + path.extname(req.file.originalname);
+    const thumbBuffer = await sharp(req.file.buffer).resize({height: 266, width: 150, fit: "cover"}).toBuffer();
 
-    const putCommand = new PutObjectCommand({
+    const filename = Date.now() + path.extname(req.file.originalname);
+
+    const imgName = "Author-Image-" + filename;
+    const thumbName = "Author-thumb-" + filename;
+
+    const imgPutCommand = new PutObjectCommand({
       Bucket: process.env.CYCLIC_BUCKET_NAME,
       Body: imgBuffer,
       Key: imgName
     });
 
-    await s3.send(putCommand);
+    const thumbPutCommand = new PutObjectCommand({
+      Bucket: process.env.CYCLIC_BUCKET_NAME,
+      Body: thumbBuffer,
+      Key: thumbName
+    });
+
+    await s3.send(imgPutCommand);
+    await s3.send(thumbPutCommand);
 
     const newAuthor = new Author({
       img: imgName,
+      thumb: thumbName,
       name: data.name,
       bio: data.bio,
       dob: new Date(data.dob)

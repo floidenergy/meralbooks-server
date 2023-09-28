@@ -13,11 +13,18 @@ module.exports = async (req, res, next) => {
 
     try {
       // fs.unlinkSync(`./Uploads/Images/Book/${book.img.split('/')[4]}`);
-      const deleteCommand = new DeleteObjectCommand({
+      const imgDeleteCommand = new DeleteObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Key: book.img
       })
-      await s3.send(deleteCommand);
+
+      const thumbDeleteCommand = new DeleteObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: book.thumb
+      })
+
+      await s3.send(imgDeleteCommand);
+      await s3.send(thumbDeleteCommand);
     } catch (error) { }
 
     await book.deleteOne();

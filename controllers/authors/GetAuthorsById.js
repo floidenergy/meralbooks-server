@@ -17,21 +17,29 @@ module.exports = async (req, res, next) => {
     delete author.updatedAt
     delete author.__v
 
-    const getCommand = new GetObjectCommand({
+    
+
+    for(const book of author.books){
+      const getBookThumbCommand = new GetObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: book.thumb
+      });
+  
+      book.thumb = await getSignedUrl(s3, getBookThumbCommand, {expiresIn: 120});
+    }
+
+    const getAuthorImgCommand = new GetObjectCommand({
       Bucket: process.env.CYCLIC_BUCKET_NAME,
       Key: author.img
     });
 
-    for(const book of author.books){
-      const getCommand = new GetObjectCommand({
-        Bucket: process.env.CYCLIC_BUCKET_NAME,
-        Key: book.img
-      });
-  
-      book.img = await getSignedUrl(s3, getCommand, {expiresIn: 120});
-    }
+    const getAuthorThumbCommand = new GetObjectCommand({
+      Bucket: process.env.CYCLIC_BUCKET_NAME,
+      Key: author.thumb
+    });
 
-    author.img = await getSignedUrl(s3, getCommand, { expiresIn: 120 });
+    author.img = await getSignedUrl(s3, getAuthorImgCommand, { expiresIn: 120 });
+    author.thumb = await getSignedUrl(s3, getAuthorThumbCommand, { expiresIn: 120 });
 
     res.status(200).json({ ...author._doc, UTCdob: author.dob.toUTCString().substring(0, 16) })
 

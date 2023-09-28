@@ -13,9 +13,14 @@ module.exports = async (req, res, next) => {
     if (book.review.length !== 0)
       await book.populate('review')
 
-    const getCommand = new GetObjectCommand({
+    const getBookImgCommand = new GetObjectCommand({
       Bucket: process.env.CYCLIC_BUCKET_NAME,
       Key: book.img
+    })
+
+    const getBookThumbCommand = new GetObjectCommand({
+      Bucket: process.env.CYCLIC_BUCKET_NAME,
+      Key: book.thumb
     })
 
     const getAuthorCommand = new GetObjectCommand({
@@ -23,7 +28,8 @@ module.exports = async (req, res, next) => {
       Key: book.author.img
     })
 
-    book.img = await getSignedUrl(s3, getCommand, { expiresIn: 120 });
+    book.img = await getSignedUrl(s3, getBookImgCommand, { expiresIn: 120 });
+    book.thumb = await getSignedUrl(s3, getBookThumbCommand, {expiresIn: 120});
     book.author.img = await getSignedUrl(s3, getAuthorCommand, { expiresIn: 120 });
 
     res.status(200).json(book);

@@ -11,32 +11,48 @@ module.exports = async (req, res, next) => {
 
     const data = req.body;
 
-    /**
-     * @old_img : Author-1690371947960.jpg
-     */
+
 
     const author = await Author.findById(req.params.id);
     if (req.file) {
       if (author.img != undefined) {
-        const deleteCommand = new DeleteObjectCommand({
+        const deleteImgCommand = new DeleteObjectCommand({
           Bucket: process.env.CYCLIC_BUCKET_NAME,
           Key: author.img
         });
-        await s3.send(deleteCommand);
+
+        const deleteThumbCommand = new DeleteObjectCommand({
+          Bucket: process.env.CYCLIC_BUCKET_NAME,
+          Key: author.thumb
+        });
+
+        await s3.send(deleteImgCommand);
+        await s3.send(deleteThumbCommand);
       }
-      
+
       //upload img into aws.s3 bucket
-      author.img = "Author" + "-" + Date.now() + path.extname(req.file.originalname);
+      const filename = Date.now() + path.extname(req.file.originalname);
 
-      const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
+      author.img = "Author-Image-" + filename;
+      author.thumb = "Author-Thumb-" + filename;
 
-      const putCommand = new PutObjectCommand({
+      const imgBuffer = await sharp(req.file.buffer).resize({ height: 1920, width: 1080, fit: "cover" }).toBuffer();
+      const thumbBuffer = await sharp(req.file.buffer).resize({ height: 266, width: 150, fit: "cover" }).toBuffer();
+
+      const imgPutCommand = new PutObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Body: imgBuffer,
         Key: author.img
       })
-      
-      await s3.send(putCommand);
+
+      const thumbPutCommand = new PutObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Body: thumbBuffer,
+        Key: author.thumb
+      })
+
+      await s3.send(imgPutCommand);
+      await s3.send(thumbPutCommand);
     }
 
 

@@ -11,34 +11,57 @@ module.exports = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id);
 
-    let imgName;
 
     if (req.file) {
-      // if (book.img) {
-      //   // fs.unlinkSync(`./Uploads/Images/Author/${book.img.split('/')[4]}`)
-      // }
-      // book.img = `${process.env.SERVER_LINK}/book/${req.file.filename}`;
-      const deleteCommand = new DeleteObjectCommand({
+      let imgName;
+      let thumbName;
+      
+      const imgDeleteCommand = new DeleteObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Key: book.img
       });
-      s3.send(deleteCommand);
-      imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
-      const imgBuffer = await sharp(req.file.buffer).resize({ height: 1920, width: 1080, fit: "cover" }).toBuffer();
-      const putCommand = new PutObjectCommand({
+
+      const thumbDeleteCommand = new DeleteObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Key: book.thumb
+      })
+
+      const fileName = Date.now() + path.extname(req.file.originalname);
+
+      imgName = "Book-" + fileName;
+      const imgBuffer = await sharp(req.file.buffer).resize({ height: 1200, width: 675, fit: "cover" }).toBuffer();
+
+      thumbName = "BookThumb-" + fileName;
+      const thumbBuffer = await sharp(req.file.buffer).resize({ height: 266, width: 150, fit: "cover" }).toBuffer();
+
+      const imgPutCommand = new PutObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Body: imgBuffer,
         Key: imgName
       });
-      
-      
-      s3.send(putCommand);
-      
+
+      const thumbPutCommand = new PutObjectCommand({
+        Bucket: process.env.CYCLIC_BUCKET_NAME,
+        Body: thumbBuffer,
+        Key: thumbName
+      });
+
+      // it's catching errors here
+      await s3.send(imgPutCommand);
+      // console.log("hhhh");
+      await s3.send(thumbPutCommand);
+      await s3.send(imgDeleteCommand);
+
+      if (book.thumb)
+        await s3.send(thumbDeleteCommand);
+
+      book.img = imgName;
+      book.thumb = thumbName;
+
     }
-    
-    
-    
-    book.img = imgName;
+
+
+
     // ||====> **Update book from author** <====||
 
     // ====> delete book from the first author
@@ -54,6 +77,7 @@ module.exports = async (req, res, next) => {
       console.log(`${book.name} is already in ${author.name}`);
     }
 
+
     // ||====> edit categories in book <====||
     book.category = req.body.category;
     // ||====> edit language Language <====||
@@ -66,10 +90,10 @@ module.exports = async (req, res, next) => {
     book.description = req.body.description;
 
 
-    book.save();
+    const result = await book.save();
 
     res.status(200).send('ok');
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 }
