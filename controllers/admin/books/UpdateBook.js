@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
     if (req.file) {
       let imgName;
       let thumbName;
-      
+
       const imgDeleteCommand = new DeleteObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,
         Key: book.img
@@ -47,13 +47,11 @@ module.exports = async (req, res, next) => {
       });
 
       // it's catching errors here
+      s3.send(imgDeleteCommand);
+      s3.send(thumbDeleteCommand);
       await s3.send(imgPutCommand);
-      // console.log("hhhh");
       await s3.send(thumbPutCommand);
-      await s3.send(imgDeleteCommand);
 
-      if (book.thumb)
-        await s3.send(thumbDeleteCommand);
 
       book.img = imgName;
       book.thumb = thumbName;
