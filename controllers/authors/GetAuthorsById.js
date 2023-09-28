@@ -39,6 +39,7 @@ module.exports = async (req, res, next) => {
     });
 
     author.img = await getSignedUrl(s3, getAuthorImgCommand, { expiresIn: 120 });
+    if(author.thumb)
     author.thumb = await getSignedUrl(s3, getAuthorThumbCommand, { expiresIn: 120 });
 
     res.status(200).json({ ...author._doc, UTCdob: author.dob.toUTCString().substring(0, 16) })
