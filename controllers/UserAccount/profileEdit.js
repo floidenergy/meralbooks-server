@@ -3,9 +3,7 @@ const { validatePassword, genPassword } = require('../../utils/passwordUtils');
 
 module.exports.ProfileEdit = async (req, res, next) => {
     // skipping this till implement the forum and profile system
-    // next();
-
-    // TODO: UPLOAD IMAGE AS FILES
+    next();
 
     const data = req.body;
 

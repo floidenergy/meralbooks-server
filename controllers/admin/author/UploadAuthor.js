@@ -2,7 +2,7 @@
 const Author = require('../../../model/author');
 const path = require('path')
 const sharp = require('sharp')
-const {PutObjectCommand} = require('@aws-sdk/client-s3')
+const { PutObjectCommand } = require('@aws-sdk/client-s3')
 
 const s3 = require('../../../utils/s3');
 
@@ -11,13 +11,24 @@ module.exports = async (req, res, next) => {
   try {
 
     const data = req.body;
-    const imgBuffer = await sharp(req.file.buffer).resize({height: 1920, width: 1080, fit: "cover"}).toBuffer();
-    const thumbBuffer = await sharp(req.file.buffer).resize({height: 266, width: 150, fit: "cover"}).toBuffer();
 
-    const filename = Date.now() + path.extname(req.file.originalname);
+    const filename = Date.now() + ".jpeg";
+    const imageConfig = { quality: 60 }
 
     const imgName = "Author-Image-" + filename;
     const thumbName = "Author-thumb-" + filename;
+
+    const imgBuffer = await sharp(req.file.buffer)
+      .resize({ height: 1920, width: 1080, fit: "cover" })
+      .flatten({ background: '#ffffff' })
+      .jpeg(imageConfig)
+      .toBuffer();
+
+    const thumbBuffer = await sharp(req.file.buffer)
+      .resize({ height: 266, width: 150, fit: "cover" })
+      .flatten({ background: '#ffffff' })
+      .jpeg(imageConfig)
+      .toBuffer();
 
     const imgPutCommand = new PutObjectCommand({
       Bucket: process.env.CYCLIC_BUCKET_NAME,

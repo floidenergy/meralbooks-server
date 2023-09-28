@@ -26,13 +26,23 @@ module.exports = async (req, res, next) => {
         Key: book.thumb
       })
 
-      const fileName = Date.now() + path.extname(req.file.originalname);
+      const fileName = Date.now() + ".jpeg";
+      const imageConfig = { quality: 60 }
 
       imgName = "Book-" + fileName;
-      const imgBuffer = await sharp(req.file.buffer).resize({ height: 1200, width: 675, fit: "cover" }).toBuffer();
+      const imgBuffer = await sharp(req.file.buffer)
+        .resize({ height: 1200, width: 675, fit: "cover" })
+        .flatten({ background: '#ffffff' })
+        .jpeg(imageConfig)
+        .toBuffer();
 
       thumbName = "BookThumb-" + fileName;
-      const thumbBuffer = await sharp(req.file.buffer).resize({ height: 266, width: 150, fit: "cover" }).toBuffer();
+      const thumbBuffer = await sharp(req.file.buffer)
+        .resize({ height: 266, width: 150, fit: "cover" })
+        .flatten({ background: '#ffffff' })
+        .jpeg(imageConfig)
+        .toBuffer();
+
 
       const imgPutCommand = new PutObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,

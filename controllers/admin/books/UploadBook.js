@@ -1,6 +1,6 @@
 const sharp = require('sharp');
 const path = require('path');
-const {PutObjectCommand} = require('@aws-sdk/client-s3');
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const Book = require('../../../model/book');
 const Author = require('../../../model/author');
@@ -11,15 +11,23 @@ module.exports = async (req, res, next) => {
 
     const data = req.body;
 
-    const randomString = Date.now() + path.extname(req.file.originalname);
+    const fileName = Date.now() + ".jpeg";
+    const imageConfig = { quality: 60, }
 
-    const imgBuffer = await sharp(req.file.buffer).resize({height: 1200, width: 675, fit: "cover"}).toBuffer();
+    const imgBuffer = await sharp(req.file.buffer)
+      .resize({ height: 1200, width: 675, fit: "cover" })
+      .flatten({ background: "#ffffff" })
+      .jpeg(imageConfig)
+      .toBuffer();
     // const imgName = "Book" + "-" + Date.now() + path.extname(req.file.originalname);
-    const imgName = "Book-" + randomString; 
+    const imgName = "Book-" + fileName;
 
-    const thumbBuffer = await sharp(req.file.buffer).resize({height: 266, width: 150, fit: "cover"}).toBuffer();
-    sharp().resize({}).jp
-    const thumbName = "BookThumb-" +  randomString;
+    const thumbBuffer = await sharp(req.file.buffer)
+      .resize({ height: 266, width: 150, fit: "cover" })
+      .flatten({ background: '#ffffff' })
+      .jpeg(imageConfig)
+      .toBuffer();
+    const thumbName = "BookThumb-" + fileName;
 
     const imgPutCommand = new PutObjectCommand({
       Bucket: process.env.CYCLIC_BUCKET_NAME,
@@ -49,7 +57,7 @@ module.exports = async (req, res, next) => {
     })
 
     await book.save();
-    await Author.findByIdAndUpdate(data.author, {$push: {books: book._id}});
+    await Author.findByIdAndUpdate(data.author, { $push: { books: book._id } });
     res.status(200).json({ message: "Book Added" });
   } catch (err) {
     console.log(err);

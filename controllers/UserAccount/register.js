@@ -15,18 +15,7 @@ const Register = async (req, res, next) => {
       return res.json({ message: "please provide a valid data" });
 
   const userSecret = genPassword(password);
-//   const newUser = new User({
-//       name: {
-//           fName: fName,
-//           lName: lName
-//       },
-//       username: username,
-//       email: email,
-//       gender: gender,
-
-//       hash: userSecret.hash,
-//       salt: userSecret.salt,
-//   })
+  
     const newUser = new User({
         name: {
             fName,
