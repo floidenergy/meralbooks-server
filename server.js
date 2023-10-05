@@ -11,10 +11,11 @@ const cookieParser = require('cookie-parser');
 
 const cors = require('cors')
 
-const AccountsRouter = require('./routes/Accounts');
 const adminRouter = require('./routes/admin');
+const AccountsManagementRoute = require('./routes/AccountsManagement');
+const ClientRouter = require('./routes/clientRequests')
 const apiRouter = require('./routes/api')
-const StoreRoute = require('./routes/Store')
+const StoreRoute = require('./routes/search')
 
 const { Logout } = require('./controllers/UserAccount/logout');
 
@@ -30,7 +31,7 @@ server.use(express.json({ limit: '2mb' }));
 server.use(express.urlencoded({ extended: false }));
 
 // for public image sharing folders
-server.use(express.static('./Uploads/Images/'))
+// server.use(express.static('./Uploads/Images/'))
 server.use(express.static('./public'))
 
 
@@ -86,7 +87,12 @@ server.use('/admin', cors({
 server.use('/account', cors({
     origin: process.env.ALLOWED_ORIGIN.split(', '),
     credentials: true
-}), AccountsRouter);
+}), AccountsManagementRoute);
+
+server.use('/client', cors({
+    origin: process.env.ALLOWED_ORIGIN.split(', '),
+    credentials: true
+}), ClientRouter)
 
 server.use("/", cors({
     origin: process.env.ALLOWED_ORIGIN.split(', ')
@@ -95,6 +101,7 @@ server.use("/", cors({
 server.get('/', cors({
     origin: '*'
 }), (req, res, next) => {
+
     res.send('welcome to meralbooks backend server')
 })
 
@@ -102,7 +109,9 @@ server.get('/', cors({
 server.use((err, req, res, next) => {
     if (err) {
         console.log(`error: ${err.message}`);
-        res.status(500).json({ message: err?.message });
+
+        if (!res.headersSent)
+            res.status(500).json({ message: err?.message });
     }
     next();
 })

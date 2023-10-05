@@ -19,13 +19,13 @@ const orderSchema = new Schema({
         ref: 'User',
         required: true
     },
-    total_amount: {
+    totalAmount: {
         type: Number,
         required: true
     },
     items: [{
         type: Schema.Types.ObjectId,
-        ref: 'Order_Items',
+        ref: 'OrderItems',
         required: true
     }],
     status: {
@@ -33,14 +33,14 @@ const orderSchema = new Schema({
         enum: ['Preparing', 'Whent To Shipping', 'Delivered', "Done"],
         default: 'Preparing'
     },
-    shipping_agency: {
+    shippingAgency: {
         type: String,
         enum: ['Yalidin', 'Coyot'],
         required: true
     },
-    shipping_info: {
+    shippingInfo: {
         type: Schema.Types.ObjectId,
-        ref: 'Shipping_Info',
+        ref: 'ShippingInfo',
         required: true
     }
 },

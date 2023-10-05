@@ -1,8 +1,9 @@
 const { DeleteObjectCommand } = require('@aws-sdk/client-s3')
 
 const s3 = require('../../../utils/s3');
-const Book = require('../../../model/book')
+const Book = require('../../../model/book');
 const Author = require('../../../model/author');
+const Reviews = require('../../../model/bookReview');
 
 module.exports = async (req, res, next) => {
   const id = req.params.id;
@@ -26,6 +27,11 @@ module.exports = async (req, res, next) => {
       await s3.send(imgDeleteCommand);
       await s3.send(thumbDeleteCommand);
     } catch (error) { }
+
+    book.review.forEach(async r => {
+      console.log(r);
+      await Reviews.findByIdAndDelete(r)
+    });
 
     await book.deleteOne();
 

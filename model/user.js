@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
 const userModel = new Schema({
     name: {
@@ -18,55 +18,60 @@ const userModel = new Schema({
         type: String,
         required: true
     },
-    gender:{
+    gender: {
         type: String,
+        enum: ['male', 'female'],
         required: true
     },
-    dob:{
+    dob: {
         type: Date,
         required: true
     },
-    profilePic:{
+    profilePic: {
         type: String,
         required: false,
         // default: 
     },
-    email:{
+    thumb: {
+        type: String,
+        required: false,
+    },
+    email: {
         type: String,
         required: true
     },
-    confirmedEmail:{
+    confirmedEmail: {
         type: Boolean,
         default: false
     },
-    hash:{
+    hash: {
         type: String,
         required: true
     },
-    salt:{
+    salt: {
         type: String,
         required: true
     },
-    shipping_info:[{
+    shippingInfo: [{
         type: Schema.Types.ObjectId,
-        ref: 'Shipping_Info'
+        ref: 'ShippingInfo'
     }],
-    order_history:[{
+    orderHistory: [{
         type: Schema.Types.ObjectId,
         ref: 'Orders',
         required: true
     }],
-    isAdmin:{
+    isAdmin: {
         type: Boolean,
         default: undefined
     },
-    privacyToken:{
+    privacyToken: {
         type: [String],
         required: true
     }
 },
-{
-    timestamps: true
-})
+    {
+        timestamps: true
+    })
 
 module.exports = model("User", userModel);

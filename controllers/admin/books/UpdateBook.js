@@ -87,7 +87,7 @@ module.exports = async (req, res, next) => {
 
 
     // ||====> edit categories in book <====||
-    book.category = req.body.category;
+    book.genre = req.body.genre;
     // ||====> edit language Language <====||
     book.language = req.body.language;
 

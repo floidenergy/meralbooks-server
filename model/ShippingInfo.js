@@ -18,10 +18,6 @@ const ShippingInfoSchema = new mongoose.Schema({
       postalCode: {
         type: String,
         required: true
-      },
-      country: {
-        type: String,
-        required: true
       }
     },
     required: true
@@ -34,4 +30,4 @@ const ShippingInfoSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = model('Shipping_Info', addressSchema);
+module.exports = model('ShippingInfo', addressSchema);

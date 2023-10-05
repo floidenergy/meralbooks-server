@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 
-const categoriesModel = new Schema({
+const genreModel = new Schema({
     name: {
         type: String,
         required: true,
@@ -8,10 +8,14 @@ const categoriesModel = new Schema({
     description:{
         type: String,
         required: false
+    },
+    count: {
+        type: Number,
+        default: 0
     }
 },
 {
     timestamps: true
 });
 
-module.exports = model("Category", categoriesModel);
+module.exports = model("Genre", genreModel);

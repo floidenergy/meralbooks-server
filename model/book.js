@@ -35,15 +35,20 @@ const bookSchema = new Schema({
         enum: ['Arabic', 'French', 'English'],
         required: true
     },
-    category:[{
+    genre:[{
         type: Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: 'Genre',
         required: true
     }],
     review:[{
         type: Schema.Types.ObjectId,
         ref: 'bookReview'
     }],
+    rating:{
+        type: Number,
+        default: 0,
+        required: true
+    }
 },
 {
     timestamps: true

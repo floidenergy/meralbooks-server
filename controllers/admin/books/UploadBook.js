@@ -52,7 +52,7 @@ module.exports = async (req, res, next) => {
       author: data.author,
       price: data.price,
       language: data.language,
-      category: data.category,
+      genre: data.genre,
       price: data.price
     })
 

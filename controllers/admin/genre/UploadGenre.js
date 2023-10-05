@@ -1,9 +1,10 @@
-const Category = require('../../../model/category');
+const Genre = require('../../../model/genre');
 
 module.exports = async (req, res, next) => {
   try {
-    const category = new Category(req.body);
-    category.save();
+    const genre = new Genre(req.body);
+    
+    genre.save();
     res.sendStatus(201)
 
   } catch (err) {

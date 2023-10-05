@@ -20,4 +20,4 @@ const orderItemsSchema = new Schema({
     timestamps: true
 });
 
-module.exports = model('Order_Items', orderItemsSchema);
+module.exports = model('OrderItems', orderItemsSchema);

@@ -13,9 +13,9 @@ const UpdateAuthor = require('../controllers/admin/author/UpdateAuthor');
 const DeleteAuthor = require('../controllers/admin/author/DeleteAuthor');
 
 // Categories Functions
-const UploadCategory = require('../controllers/admin/category/UploadCategory');
-const UpdateCategory = require('../controllers/admin/category/UpdateCategory');
-const DeleteCategory = require('../controllers/admin/category/DeleteCategory');
+const Uploadgenre = require('../controllers/admin/genre/UploadGenre');
+const Updategenre = require('../controllers/admin/genre/Updategenre');
+const Deletegenre = require('../controllers/admin/genre/Deletegenre');
 
 // Books Functions
 const UploadBook = require('../controllers/admin/books/UploadBook');
@@ -77,12 +77,12 @@ router.route('/author/:id')
     .delete(DeleteAuthor)
 
 // Categories
-router.route('/category')
-    .post(UploadCategory)
+router.route('/genre')
+    .post(Uploadgenre)
 
-router.route('/category/:id')
-    .delete(DeleteCategory)
-    .put(UpdateCategory)
+router.route('/genre/:id')
+    .delete(Deletegenre)
+    .put(Updategenre)
 
 router.route('/supply')
     .get(getSupplies)
