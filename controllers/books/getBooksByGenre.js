@@ -12,13 +12,7 @@ module.exports = async (req, res, next) => {
 
     for (const book of books) {
       if (book.review?.length !== 0)
-        book.populate({
-          path: "books",
-          path: {
-            path: "review",
-            model: "bookReview"
-          }
-        })
+        book.populate('review')
 
       const getBookThumbCommand = new GetObjectCommand({
         Bucket: process.env.CYCLIC_BUCKET_NAME,

@@ -8,8 +8,8 @@ const GetAuthorsById = require('../../../controllers/authors/GetAuthorsById');
 
 const getBooks = require('../../../controllers/books/GetBook');
 const getBooksById = require('../../../controllers/books/GetBookById');
-const getBooksByGenre = require('../../../controllers/books/getBookByGenre')
-const getBooksByAuthor = require('../../../controllers/books/getBookByAuthor')
+const getBooksByGenre = require('../../../controllers/books/getBooksByGenre')
+const getBooksByAuthor = require('../../../controllers/books/GetBooksByAuthor')
 
 const router = Router();
 

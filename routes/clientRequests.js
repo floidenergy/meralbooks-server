@@ -2,6 +2,8 @@ require('dotenv').config();
 
 const { Router } = require('express');
 
+
+const {ReqError, TryCatch} = require('../utils/Error');
 const BookReview = require('../model/bookReview');
 const Book = require('../model/book');
 
@@ -17,9 +19,14 @@ const ClientRouter = Router();
 // })
 
 // post review 
-ClientRouter.put('/review/:id', async (req, res, next) => {
+ClientRouter.put('/review/:id', TryCatch( async (req, res, next) => {
 
-
+  if (!req.user){
+    throw new ReqError("authentification required to submit a review", 511);
+    return res.sendStatus(511).json({ message: "Please Stop editing HTML CODE, authentification required sir" })
+    console.log(req.user);
+    return
+  }
 
   const book = await Book.findById(req.params.id);
 
@@ -49,6 +56,6 @@ ClientRouter.put('/review/:id', async (req, res, next) => {
     console.log(err);
     next();
   }
-})
+}))
 
 module.exports = ClientRouter;

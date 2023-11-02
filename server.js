@@ -10,6 +10,7 @@ const passport = require("passport");
 const cookieParser = require('cookie-parser');
 
 const cors = require('cors')
+const morgan = require('morgan')
 
 const adminRouter = require('./routes/admin');
 const AccountsManagementRoute = require('./routes/AccountsManagement');
@@ -25,6 +26,8 @@ const server = express();
 
 server.set('trust proxy', 1);
 
+server.use(morgan('dev'))
+server.use(cors({origin: process.env.ALLOWED_ORIGIN.split(', '), credentials: true}))
 server.use(cookieParser());
 
 server.use(express.json({ limit: '2mb' }));
@@ -71,36 +74,20 @@ server.use(passport.session());
 
 
 // Getters router
-server.use('/api', cors({ origin: "*" }), apiRouter);
+server.use('/api', apiRouter);
 
-server.get("/logout", cors({
-    origin: process.env.ALLOWED_ORIGIN.split(', '),
-    credentials: true
-}), Logout)
+server.get("/logout", Logout)
 
 // Admin related routes
-server.use('/admin', cors({
-    origin: process.env.ALLOWED_ORIGIN.split(', '),
-    credentials: true
-}), adminRouter)
+server.use('/admin', adminRouter)
 
-server.use('/account', cors({
-    origin: process.env.ALLOWED_ORIGIN.split(', '),
-    credentials: true
-}), AccountsManagementRoute);
+server.use('/account', AccountsManagementRoute);
 
-server.use('/client', cors({
-    origin: process.env.ALLOWED_ORIGIN.split(', '),
-    credentials: true
-}), ClientRouter)
+server.use('/client', ClientRouter)
 
-server.use("/", cors({
-    origin: process.env.ALLOWED_ORIGIN.split(', ')
-}), StoreRoute)
+server.use("/", StoreRoute)
 
-server.get('/', cors({
-    origin: '*'
-}), (req, res, next) => {
+server.get('/', (req, res, next) => {
 
     res.send('welcome to meralbooks backend server')
 })
@@ -111,7 +98,7 @@ server.use((err, req, res, next) => {
         console.log(`error: ${err.message}`);
 
         if (!res.headersSent)
-            res.status(500).json({ message: err?.message });
+            res.status(err.status).json({ message: err?.message });
     }
     next();
 })
