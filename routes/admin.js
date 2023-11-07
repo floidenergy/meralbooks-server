@@ -14,8 +14,8 @@ const DeleteAuthor = require('../controllers/admin/author/DeleteAuthor');
 
 // Categories Functions
 const Uploadgenre = require('../controllers/admin/genre/UploadGenre');
-const Updategenre = require('../controllers/admin/genre/Updategenre');
-const Deletegenre = require('../controllers/admin/genre/Deletegenre');
+const Updategenre = require('../controllers/admin/genre/UpdateGenre');
+const Deletegenre = require('../controllers/admin/genre/DeleteGenre');
 
 // Books Functions
 const UploadBook = require('../controllers/admin/books/UploadBook');
