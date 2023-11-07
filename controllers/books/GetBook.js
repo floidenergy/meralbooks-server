@@ -4,7 +4,7 @@ const Book = require('../../model/book');
 
 // const s3 = require('../../utils/s3')
 
-const {PrepareBook} = require('./utils')
+const {PrepareBook} = require('../util/BooksUtils')
 module.exports = async (req, res, next) => {
   try {
     // const books = await Book.find().exec(); 

@@ -4,7 +4,8 @@ const Author = require('../../model/author')
 
 // const s3 = require('../../utils/s3')
 
-const {PrepareBook} = require('./utils')
+const {PrepareBook} = require('../util/BooksUtils')
+
 module.exports = async (req, res, next) => {
   try {
 

@@ -14,6 +14,9 @@ const { Register } = require('../controllers/UserAccount/register')
 const { emailConfirmation } = require('../controllers/UserAccount/eConfirmation');
 const { ProfileEdit } = require('../controllers/UserAccount/profileEdit')
 
+
+// TODO: CHANGE THE AUTHENTIFICATION FROM /ACCOUNT/LOGIN & /ACCOUNT/REGISTER TO /AUTH/LOGIN & /AUTH/REGISTER
+
 AccountsRouter.post("/login", passport.authenticate('local', {
     successMessage: "you have been succesfully connected",
     failureMessage: true

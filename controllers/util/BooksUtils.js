@@ -3,8 +3,12 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner")
 
 const s3 = require('../../utils/s3')
 
+const { preprareUser } = require('./UserUtils')
+
 const PrepareBook = async (bookData) => {
   let book = bookData
+
+  // populate reviews
   if (book.review?.length !== 0) {
     await book.populate('review')
     await book.populate({
@@ -15,47 +19,23 @@ const PrepareBook = async (bookData) => {
       }
     })
 
-    // TODO: NEXT => DELETE THE USER SENSITIVE DATA BEFORE SENDING IT
-    /**
-      email
-      confirmedEmail
-      isAdmin
-      hash
-      salt
-      privacyToken
-      accountHistory
-      created_at
-      info
-      __v
-      dob
-      shippingInfo
-      orderHistory
-     */
-    
+
     book.review = book.review.map(async review => {
-      // delete review.user.email
-      // delete review.user.confirmedEmail
-      // delete review.user.isAdmin
-      // delete review.user.hash
-      // delete review.user.salt
-      // delete review.user.privacyToken
-      // delete review.user.accountHistory
-      // delete review.user.created_at
-      // delete review.user.info
-      // delete review.user.__v
-      // delete review.user.dob
-      // delete review.user.shippingInfo
-      // delete review.user.orderHistory
-      // console.log(review.user);
-      delete review._id
+      review.user = preprareUser(review.user);
       return review
     })
-
-    console.log(book.review);
   }
 
-  await book.populate('genre')
+  // setup book rating points (out of 5)
+  let rating = 0;
+  book.review.forEach(review => rating += review.rate)
+  book.rating = (rating / book.review.length).toFixed(2)
 
+
+  await book.populate('genre') // populate book genre
+
+
+  // creating the images Link
   const getBookImgCommand = new GetObjectCommand({
     Bucket: process.env.CYCLIC_BUCKET_NAME,
     Key: book.img

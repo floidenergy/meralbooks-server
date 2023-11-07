@@ -16,6 +16,7 @@ const userModel = new Schema({
     },
     username: {
         type: String,
+        unique: true,
         required: true
     },
     gender: {
@@ -38,6 +39,7 @@ const userModel = new Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true
     },
     confirmedEmail: {
@@ -56,18 +58,17 @@ const userModel = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'ShippingInfo'
     }],
-    orderHistory: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Orders',
-        required: true
-    }],
+    orderHistory: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Orders',
+            required: true
+        }],
+        required: false
+    },
     isAdmin: {
         type: Boolean,
         default: undefined
-    },
-    privacyToken: {
-        type: [String],
-        required: true
     }
 },
     {

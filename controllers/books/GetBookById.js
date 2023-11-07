@@ -3,7 +3,7 @@
 // const s3 = require('../../utils/s3')
 
 const Book = require('../../model/book');
-const {PrepareBook} = require('./utils')
+const {PrepareBook} = require('../util/BooksUtils')
 
 module.exports = async (req, res, next) => {
   try {

@@ -28,7 +28,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon --exec \"cls && node dev.js\""
+    "dev": "nodemon --exec \"clear && node dev.js\""
   },
   "keywords": [],
   "author": "floidenergy",
